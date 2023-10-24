@@ -4,6 +4,16 @@ body {
     line-height: 1.6;
 }
 
+.title_header_index01 {
+    font-size: xxx-large;
+    font-weight: bold;
+}
+
+.title_header_index02 {
+    font-size: xx-large;
+    font-weight: lighter;
+}
+
 .login {
     background-color: #fff;
     width: fit-content;
@@ -11,6 +21,12 @@ body {
     border-radius: 5px;
     box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
     text-align: center;
+}
+
+.login_title {
+    font-weight: bold;
+    font-size: xxx-large;
+    font-family: sans-serif;
 }
 
 .footer {
@@ -22,28 +38,22 @@ body {
     text-align: center;
     padding: 10px 0;
 }
+
 .footer a {
     color: #fff;
     margin: 0 10px;
     text-decoration: none;
 }
+
 .footer .separator {
     margin: 0 5px;
 }
+
 img {
     max-width: 100%;
     height: auto;
     width: auto;
     background-repeat: no-repeat;
-}
-
-.title_header_index01 {
-    font-size: xxx-large;
-    font-weight: bold;
-}
-.title_header_index02 {
-    font-size: xx-large;
-    font-weight: lighter;
 }
 
 .title_header_pages01 {
