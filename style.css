@@ -60,3 +60,15 @@ img {
     font-size: xx-large;
     font-weight: bold;
 }
+
+.gold_leaderboard {
+    color: gold;
+}
+
+.silver_leaderboard {
+    color: silver;
+}
+
+.bronze_leaderboard {
+    color: saddlebrown;
+}
