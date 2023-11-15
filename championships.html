@@ -6,6 +6,12 @@
     <title>Championships | Championship Manager</title>
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
     <link rel="stylesheet" href="style.css">
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js"></script>
+    <script>
+        const SUPABASE_URL = 'https://cbpdfyauboisozcxuohi.supabase.co'
+        const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImNicGRmeWF1Ym9pc296Y3h1b2hpIiwicm9sZSI6ImFub24iLCJpYXQiOjE2OTk5NTIwODEsImV4cCI6MjAxNTUyODA4MX0.A1DXi3mrghJdLH2j87DLsbyG8aPdPQLPbO9IGpxqTO0'
+        const _supabase = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY)
+    </script>
 </head>
 <body>
 
@@ -33,7 +39,6 @@
     </div>
 </nav>
 
-<!--Sample data of current real racing championships-->
 <div class="container mt-4">
     <h1 class="title_header_pages01">Championships</h1>
     <table class="table">
@@ -45,28 +50,33 @@
             <th>Best driver</th>
         </tr>
         </thead>
-        <tbody>
-        <tr>
-            <td>Formula 1</td>
-            <td>2023-10-27</td>
-            <td>Mexico City GP</td>
-            <td>M. VERSTAPPEN</td>
-        </tr>
-        <tr>
-            <td>Formula 2</td>
-            <td>2023-11-26</td>
-            <td>Abu Dhabi</td>
-            <td>T. POURCHAIRE</td>
-        </tr>
-        <tr>
-            <td>Formula 3</td>
-            <td>Next season</td>
-            <td>Championship ended</td>
-            <td>G. BORTOLETO</td>
-        </tr>
+        <tbody id="tbody_championships">
+
         </tbody>
     </table>
 </div>
+
+<script>
+    document.addEventListener('DOMContentLoaded', async function () {
+        const tableBody = document.getElementById('tbody_championships');
+        const { data, error } = await _supabase.from('championships').select('*');
+
+        if (error) {
+            console.error('Error fetching data:', error.message);
+        } else {
+            data.forEach((championship) => {
+                const row = document.createElement('tr');
+                row.innerHTML = `
+                    <td>${championship.name}</td>
+                    <td>${null}</td>
+                    <td>${null}</td>
+                    <td>${null}</td>
+                `;
+                tableBody.appendChild(row);
+            });
+        }
+    });
+</script>
 
 <div class="footer">
     <div class="container">
