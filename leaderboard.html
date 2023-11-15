@@ -6,6 +6,23 @@
     <title>Leaderboard | Championship Manager</title>
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
     <link rel="stylesheet" href="style.css">
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js"></script>
+    <script>
+        const SUPABASE_URL = 'https://cbpdfyauboisozcxuohi.supabase.co'
+        const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImNicGRmeWF1Ym9pc296Y3h1b2hpIiwicm9sZSI6ImFub24iLCJpYXQiOjE2OTk5NTIwODEsImV4cCI6MjAxNTUyODA4MX0.A1DXi3mrghJdLH2j87DLsbyG8aPdPQLPbO9IGpxqTO0'
+
+        const _supabase = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY)
+
+        async function loadData() {
+            const { data, error } = await _supabase
+                .from('drivers')
+                .select()
+
+            console.log(data)
+            console.log(error)
+        }
+        loadData()
+    </script>
 </head>
 <body>
 
@@ -35,7 +52,7 @@
 
 <div class="container mt-4">
     <h1 class="title_header_pages01">Driver standings</h1>
-    <table class="table">
+    <table class="table" id="leaderboard_table">
         <thead>
         <tr>
             <th>Position</th>
@@ -45,33 +62,33 @@
             <th>Points</th>
         </tr>
         </thead>
-        <tbody>
-
-        <tr>
-            <td>1</td>
-            <td class="gold_leaderboard">Max Verstappen</td>
-            <td>Ned</td>
-            <td>RED BULL RACING HONDA RBPT</td>
-            <td>466</td>
-        </tr>
-        <tr>
-            <td>2</td>
-            <td class="silver_leaderboard">Sergio Perez</td>
-            <td>Mex</td>
-            <td>RED BULL RACING HONDA RBPT</td>
-            <td>240</td>
-        </tr>
-        <tr>
-            <td>3</td>
-            <td class="bronze_leaderboard">Driver ...</td>
-            <td>...</td>
-            <td>...</td>
-            <td>...</td>
-        </tr>
-
+        <tbody id="tbody-leaderboard">
         </tbody>
     </table>
 </div>
+
+<script>
+    document.addEventListener('DOMContentLoaded', async function () {
+        const tableBody = document.getElementById('tbody-leaderboard');
+        const { data, error } = await _supabase.from('drivers').select('*');
+
+        if (error) {
+            console.error('Error fetching data:', error.message);
+        } else {
+            data.forEach((driver, index) => {
+                const row = document.createElement('tr');
+                row.innerHTML = `
+                    <td>${index + 1}</td>
+                    <td>${driver.fullname}</td>
+                    <td>${driver.nationality}</td>
+                    <td>${driver.car}</td>
+                    <td>${driver.points}</td>
+                `;
+                tableBody.appendChild(row);
+            });
+        }
+    });
+</script>
 
 <div class="footer">
     <div class="container">

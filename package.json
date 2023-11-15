@@ -1,0 +1,7 @@
+{
+  "name": "Championship_manager_sp",
+  "version": "1.0.0",
+  "dependencies": {
+    "@supabase/supabase-js": "^2.38.4"
+  }
+}
