@@ -73,6 +73,15 @@
                     <td>${driver.car}</td>
                     <td>${driver.points}</td>
                 `;
+                if (index === 0) {
+                    row.classList.add('gold_leaderboard')
+                }
+                if (index === 1) {
+                    row.classList.add('silver_leaderboard')
+                }
+                if (index === 2) {
+                    row.classList.add('bronze_leaderboard')
+                }
                 tableBody.appendChild(row);
             });
         }
