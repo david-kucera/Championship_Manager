@@ -69,7 +69,10 @@
                     alert(error.message);
                 } else {
                     alert('Registration successful!');
-
+                    // Redirect to login page
+                    setTimeout(function() {
+                        window.location.href = "login.html";
+                    }, 1000);
                 }
             } catch (error) {
                 console.error('Error during registration:', error.message);
