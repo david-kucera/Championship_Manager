@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Login | Championship Manager</title>
+    <title>Register | Championship Manager</title>
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
     <link rel="stylesheet" href="style.css">
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js"></script>
@@ -35,22 +35,49 @@
     </div>
 </nav>
 
-<div class="container mt-4 login">
-    <h2 class="login_title">Login</h2>
-    <form id="loginForm">
+<div class="container mt-5">
+    <form>
         <div class="form-group">
-            <label for="username">Username:</label>
-            <input type="text" class="form-control" id="username" name="username" required>
+            <label for="email">Email address:</label>
+            <input type="email" class="form-control" id="email" placeholder="Enter your email" required>
         </div>
         <div class="form-group">
             <label for="password">Password:</label>
-            <input type="password" class="form-control" id="password" name="password" required>
+            <input type="password" class="form-control" id="password" placeholder="Enter your password" required>
         </div>
-        <button type="submit" class="btn btn-primary">Submit</button>
+        <button type="submit" class="btn btn-primary">Register</button>
     </form>
-    <p></p>
-    <p><a href="register.html">Not a member yet? Register here</a></p>
 </div>
+
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+        const registerForm = document.querySelector('form');
+
+        registerForm.addEventListener('submit', async function (event) {
+            event.preventDefault();
+
+            const email = document.getElementById('email').value;
+            const password = document.getElementById('password').value;
+
+            try {
+                // Create user account in Supabase
+                const { data, error } = await _supabase.auth.signUp({
+                    email: email,
+                    password: password,
+                })
+                if (error) {
+                    alert(error.message);
+                } else {
+                    alert('Registration successful!');
+
+                }
+            } catch (error) {
+                console.error('Error during registration:', error.message);
+                alert('Error during registration. Please try again.');
+            }
+        });
+    });
+</script>
 
 <div class="footer">
     <div class="container">
