@@ -7,9 +7,13 @@
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
     <link rel="stylesheet" href="style.css">
     <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.0.7/dist/umd/popper.min.js"></script>
+<!--    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.0.7/dist/umd/popper.min.js"></script>-->
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js"></script>
+
+
+<!--    nova verzia supabase JS-->
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+
     <script src="databaseinc.js"></script>
 </head>
 <body>
@@ -60,24 +64,25 @@
         const mail = document.getElementById('mail').value;
         const password = document.getElementById('password').value;
 
-        console.log(mail);
-        console.log(password);
-
         try {
             console.log("Logging in...")
             const { data, error } = await _supabase.auth.signInWithPassword({
                 email: mail,
                 password: password,
-            })
+            });
+
+            if (data) {
+                console.log("Som tu!");
+            }
+
             if (error) {
                 console.error(error);
             } else {
                 console.log('User signed in:', mail);
-            //     // Redirect to index
-            //     console.log("redirecting to index...")
-            //     setTimeout(function() {
-            //         window.location.href = "login.html";
-            //     }, 1000);
+                 // Redirect to index
+                setTimeout(function() {
+                    window.location.href = "index.html";
+                }, 1000);
             }
         } catch (error) {
             console.error('Error during login:', error.message);
