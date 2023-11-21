@@ -44,7 +44,7 @@
 
 <div class="container mt-4 login">
     <h2 class="login_title">Login</h2>
-    <form id="loginForm">
+    <form id="loginForm" onsubmit="login(event)">
         <div class="form-group">
             <label for="mail">Mail:</label>
             <input type="text" class="form-control" id="mail" name="mail" required>
@@ -53,14 +53,17 @@
             <label for="password">Password:</label>
             <input type="password" class="form-control" id="password" name="password" required>
         </div>
-        <button type="submit" class="btn btn-primary" onclick="login()">Submit</button>
+        <button type="submit" class="btn btn-primary">Submit</button>
     </form>
     <p></p>
     <p><a href="register.html">Not a member yet? Register here</a></p>
 </div>
 
 <script>
-    async function login() {
+    async function login(event) {
+
+        event.preventDefault();
+
         const mail = document.getElementById('mail').value;
         const password = document.getElementById('password').value;
 
@@ -72,17 +75,15 @@
             });
 
             if (data) {
-                console.log("Som tu!");
+                console.log('User signed in:', mail);
+                // Redirect to index
+                setTimeout(function() {
+                    window.location.href = "index.html";
+                }, 1000);
             }
 
             if (error) {
                 console.error(error);
-            } else {
-                console.log('User signed in:', mail);
-                 // Redirect to index
-                setTimeout(function() {
-                    window.location.href = "index.html";
-                }, 1000);
             }
         } catch (error) {
             console.error('Error during login:', error.message);
