@@ -13,7 +13,11 @@ async function login(event) {
         });
 
         if (data) {
-            console.log('User signed in:', mail);
+            // console.log('User signed in:', mail);
+
+            // Set cookie to know if user is signed in
+            document.cookie = "isAuthenticated=true; path=/";
+
             // Redirect to index
             setTimeout(function() {
                 window.location.href = "index.html";

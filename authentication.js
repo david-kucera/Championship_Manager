@@ -1,0 +1,8 @@
+let isAuthenticated = document.cookie.includes("isAuthenticated=true");
+if (isAuthenticated) {
+    document.getElementById('login-option').style.display = 'none';
+    document.getElementById('profile-option').style.display = 'block';
+    document.getElementById('championships-option').style.display = 'block';
+    document.getElementById('last-race-option').style.display = 'block';
+    document.getElementById('logout-option').style.display = 'block';
+}
