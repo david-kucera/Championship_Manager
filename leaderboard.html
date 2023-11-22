@@ -31,8 +31,20 @@
             <li class="nav-item">
                 <a class="nav-link" href="leaderboard.html">Leaderboard</a>
             </li>
-            <li>
+            <li id="profile-option" style="display: none;">
+                <a class="nav-link" href="profile.html">Open your profile</a>
+            </li>
+            <li id="championships-option" style="display: none;">
+                <a class="nav-link" href="championships.html">Open your championships</a>
+            </li>
+            <li id="last-race-option" style="display: none;">
+                <a class="nav-link" href="last_race.html">Open your last race</a>
+            </li>
+            <li id="login-option">
                 <a class="nav-link" href="login.html">Login</a>
+            </li>
+            <li id="logout-option" style="display: none;">
+                <a class="nav-link" href="index.html" id="logout-link" onclick="logout()">Logout</a>
             </li>
         </ul>
     </div>
@@ -100,9 +112,12 @@
         <span class="separator">|</span>
         <a href="how_to_use.html">How to Use</a>
         <span class="separator">|</span>
-        <a href="login.html">Login</a>
+        <a href="login.html" id="login-logout-footer">Login</a>
     </div>
 </div>
+
+<script src="authentication.js"></script>
+<script src="logout.js"></script>
 
 </body>
 </html>
