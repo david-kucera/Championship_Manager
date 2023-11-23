@@ -6,15 +6,15 @@ async function login(event) {
     const password = document.getElementById('password').value;
 
     try {
-        console.log("Logging in...")
         const { data, error } = await _supabase.auth.signInWithPassword({
             email: mail,
             password: password,
         });
 
-        if (data) {
-            // console.log('User signed in:', mail);
-
+        if (error) {
+            openModal(error.message);
+            console.error(error);
+        } else if (data) {
             // Set cookie to know if user is signed in
             document.cookie = "isAuthenticated=true; path=/";
 
@@ -23,11 +23,19 @@ async function login(event) {
                 window.location.href = "index.html";
             }, 1000);
         }
-
-        if (error) {
-            console.error(error);
-        }
     } catch (error) {
         console.error('Error during login:', error.message);
     }
+}
+
+// Function to open the Bootstrap modal
+function openModal(message) {
+    const errorMessage = document.getElementById('error-message');
+    errorMessage.textContent = message;
+    $('#errorModal').modal('show');
+}
+
+// Function to close the Bootstrap modal
+function closeModal() {
+    $('#errorModal').modal('hide');
 }
