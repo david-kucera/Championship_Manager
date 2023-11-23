@@ -23,6 +23,10 @@ async function login(event) {
             // Set cookie to know if user is signed in
             document.cookie = "isAuthenticated=true; path=/";
 
+            // Set cookie to know signed user id from supabase
+            const uid = data.user.id;
+            document.cookie = "uid=" + uid;
+
             // Redirect to index
             setTimeout(function() {
                 window.location.href = "index.html";
