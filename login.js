@@ -1,11 +1,16 @@
 async function login(event) {
-
     event.preventDefault();
 
     const mail = document.getElementById('mail').value;
     const password = document.getElementById('password').value;
 
+    const loginBtn = document.getElementById('loginBtn');
+
     try {
+        // Show spinner and disable the login button
+        loginBtn.innerHTML = '<span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span> Logging in...';
+        loginBtn.disabled = true;
+
         const { data, error } = await _supabase.auth.signInWithPassword({
             email: mail,
             password: password,
@@ -25,6 +30,10 @@ async function login(event) {
         }
     } catch (error) {
         console.error('Error during login:', error.message);
+    } finally {
+        // Hide spinner and enable the login button
+        loginBtn.innerHTML = 'Submit';
+        loginBtn.disabled = false;
     }
 }
 
