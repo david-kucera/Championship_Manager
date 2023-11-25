@@ -83,3 +83,13 @@ img {
     font-weight: bold;
     font-size: large;
 }
+
+.profile_h1 {
+    font-weight: bold;
+    font-size: xxx-large;
+}
+
+.profile_h2 {
+    font-weight: bold;
+    font-size: x-large;
+}

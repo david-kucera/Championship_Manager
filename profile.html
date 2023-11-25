@@ -2,9 +2,143 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Profile | Championship Manager</title>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <link rel="stylesheet" href="style.css">
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <script src="databaseinc.js"></script>
 </head>
 <body>
+
+<nav class="navbar navbar-expand-lg navbar-dark bg-primary">
+    <a class="navbar-brand" href="index.html">Championship Manager</a>
+    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav"
+            aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span>
+    </button>
+
+    <div class="collapse navbar-collapse" id="navbarNav">
+        <ul class="navbar-nav ml-auto">
+            <li class="nav-item">
+                <a class="nav-link" href="index.html">Home</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" href="championships.html">Championships</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" href="leaderboard.html">Leaderboard</a>
+            </li>
+            <li id="profile-option" style="display: none;">
+                <a class="nav-link" href="profile.html">Open your profile</a>
+            </li>
+            <li id="championships-option" style="display: none;">
+                <a class="nav-link" href="championships.html">Open your championships</a>
+            </li>
+            <li id="last-race-option" style="display: none;">
+                <a class="nav-link" href="last_race.html">Open your last race</a>
+            </li>
+            <li id="login-option">
+                <a class="nav-link" href="login.html">Login</a>
+            </li>
+            <li id="logout-option" style="display: none;">
+                <a class="nav-link" href="index.html" id="logout-link" onclick="logout()">Logout</a>
+            </li>
+        </ul>
+    </div>
+</nav>
+
+<div class="container mt-5">
+    <h1 class="profile_h1">Your profile</h1>
+
+    <div class="profile-info">
+        <h2 class="profile_h2">Info:</h2>
+
+        <div class="form-row">
+            <div class="form-group col-md-6">
+                <label for="name">Name:</label>
+                <input type="text" class="form-control" id="name" value="John Doe" readonly>
+            </div>
+            <div class="form-group col-md-2">
+                <button class="btn btn-primary edit-btn" onclick="toggleEdit('name')">Edit</button>
+                <button class="btn btn-success accept-btn" onclick="acceptChanges('name')" style="display: none;">Accept Changes</button>
+            </div>
+        </div>
+
+        <div class="form-row">
+            <div class="form-group col-md-6">
+                <label for="nationality">Nationality:</label>
+                <input type="text" class="form-control" id="nationality" value="Country" readonly>
+            </div>
+            <div class="form-group col-md-2">
+                <button class="btn btn-primary edit-btn" onclick="toggleEdit('nationality')">Edit</button>
+                <button class="btn btn-success accept-btn" onclick="acceptChanges('nationality')" style="display: none;">Accept Changes</button>
+            </div>
+        </div>
+
+        <div class="form-row">
+            <div class="form-group col-md-6">
+                <label for="email">Email:</label>
+                <input type="email" class="form-control" id="email" value="user@example.com" readonly>
+            </div>
+            <div class="form-group col-md-2">
+                <button class="btn btn-primary edit-btn" onclick="toggleEdit('email')">Edit</button>
+                <button class="btn btn-success accept-btn" onclick="acceptChanges('email')" style="display: none;">Accept Changes</button>
+            </div>
+        </div>
+
+        <div class="form-row">
+            <div class="form-group col-md-6">
+                <label for="password">Password:</label>
+                <input type="password" class="form-control" id="password" value="********" readonly>
+            </div>
+            <div class="form-group col-md-2">
+                <button class="btn btn-primary edit-btn" onclick="toggleEdit('password')">Edit</button>
+                <button class="btn btn-success accept-btn" onclick="acceptChanges('password')" style="display: none;">Accept Changes</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    function toggleEdit(fieldName) {
+        var field = document.getElementById(fieldName);
+        var editBtn = document.querySelector(`button.edit-btn[onclick="toggleEdit('${fieldName}')"]`);
+        var acceptBtn = document.querySelector(`button.accept-btn[onclick="acceptChanges('${fieldName}')"]`);
+
+        field.readOnly = !field.readOnly;
+        editBtn.style.display = field.readOnly ? 'inline-block' : 'none';
+        acceptBtn.style.display = field.readOnly ? 'none' : 'inline-block';
+    }
+
+    function acceptChanges(fieldName) {
+        var field = document.getElementById(fieldName);
+        var editBtn = document.querySelector(`button.edit-btn[onclick="toggleEdit('${fieldName}')"]`);
+        var acceptBtn = document.querySelector(`button.accept-btn[onclick="acceptChanges('${fieldName}')"]`);
+
+        // You can perform additional actions here, e.g., send data to the server.
+
+        field.readOnly = true;
+        editBtn.style.display = 'inline-block';
+        acceptBtn.style.display = 'none';
+    }
+</script>
+
+<div class="footer">
+    <div class="container">
+        <p>&copy; 2023 Championship Manager</p>
+        <a href="contact.html">Contact</a>
+        <span class="separator">|</span>
+        <a href="how_to_use.html">How to Use</a>
+        <span class="separator">|</span>
+        <a href="login.html" id="login-logout-footer" onclick="toggleLoginLogout()">Login</a>
+    </div>
+</div>
+
+<script src="authentication.js"></script>
+<script src="logout.js"></script>
 
 </body>
 </html>
