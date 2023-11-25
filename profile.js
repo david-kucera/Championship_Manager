@@ -35,7 +35,7 @@ async function populateNameNationality() {
             // Check if data exists before populating fields
             if (data) {
                 // Populate input fields with user data
-                document.getElementById('name').value = data.fullname || '';
+                document.getElementById('fullname').value = data.fullname || '';
                 document.getElementById('nationality').value = data.nationality || '';
             } else {
                 console.log('User data not found in the profiles table.');
@@ -71,9 +71,30 @@ function acceptChanges(fieldName) {
     var editBtn = document.querySelector(`button.edit-btn[onclick="toggleEdit('${fieldName}')"]`);
     var acceptBtn = document.querySelector(`button.accept-btn[onclick="acceptChanges('${fieldName}')"]`);
 
-    // You can perform additional actions here, e.g., send data to the server.
+    // Update the supabase
+    var updatedValue = field.value;
+    changeValue(updatedValue, fieldName);
 
     field.readOnly = true;
     editBtn.style.display = 'inline-block';
     acceptBtn.style.display = 'none';
+}
+
+async function changeValue(updatedValue, fieldName) {
+    // TODO does not work due to supabase policies
+    try {
+        const { data, error } = await _supabase
+            .from('profiles')
+            .update({ [fieldName]: updatedValue })
+            .eq('uid', uid);
+
+        if (error) {
+            console.error(`Error updating ${fieldName} in Supabase:`, error.message);
+            return;
+        }
+        console.log(`${fieldName} updated successfully in Supabase!`);
+
+    } catch (error) {
+        console.error('Error updating user data in Supabase:', error.message);
+    }
 }
