@@ -20,8 +20,13 @@ async function login(event) {
             openModal(error.message);
             console.error(error);
         } else if (data) {
+
             // Set cookie to know if user is signed in
             document.cookie = "isAuthenticated=true; path=/";
+
+            // Set cookie to know users mail
+            const email = data.user.email;
+            document.cookie = 'userEmail=' + email;
 
             // Set cookie to know signed user id from supabase
             const uid = data.user.id;

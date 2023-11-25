@@ -44,37 +44,14 @@ async function populateNameNationality() {
         } catch (error) {
             console.error('Error fetching user data:', error.message);
         }
-        // TODO does not work
-        // populateEmail();
+        populateEmail();
     }
 }
 
-// async function populateEmail() {
-//     if (isAuthenticated) {
-//         try {
-//             // Fetch user data from Supabase
-//             const { data, error } = await _supabase
-//                 .from('Users')
-//                 .select('email')
-//                 .eq('uid', uid)
-//                 .single();
-//
-//             if (error) {
-//                 console.error('Error fetching user data:', error.message);
-//                 return;
-//             }
-//
-//             if (data) {
-//                 document.getElementById('email').value = data.email || '';
-//             } else {
-//                 console.log('User data not found in the users table.');
-//             }
-//
-//         } catch (error) {
-//             console.error('Error fetching user data:', error.message);
-//         }
-//     }
-// }
+async function populateEmail() {
+    let mail = getCookie('userEmail');
+    document.getElementById('email').value = mail || '';
+}
 
 // Call the function to populate user data when the page loads
 document.addEventListener('DOMContentLoaded', populateNameNationality);
