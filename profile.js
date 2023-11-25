@@ -7,18 +7,13 @@ function getCookie(name) {
 
 // Get UID from the cookie
 const uid = getCookie('uid');
+const mail = getCookie('userEmail')
 
-// Use the UID as needed
-if (uid) {
-    console.log('User ID:', uid);
-    // Additional logic using the user ID...
-} else {
-    console.log('User ID not found in cookies.');
-}
-
-
+// Function to fill the fields of user profile
 async function populateNameNationality() {
     if (isAuthenticated) {
+        document.getElementById('email').value = mail || '';
+
         try {
             // Fetch user data from Supabase
             const { data, error } = await _supabase
@@ -44,18 +39,13 @@ async function populateNameNationality() {
         } catch (error) {
             console.error('Error fetching user data:', error.message);
         }
-        populateEmail();
     }
-}
-
-async function populateEmail() {
-    let mail = getCookie('userEmail');
-    document.getElementById('email').value = mail || '';
 }
 
 // Call the function to populate user data when the page loads
 document.addEventListener('DOMContentLoaded', populateNameNationality);
 
+// Function to change button when user wants to edit fields
 function toggleEdit(fieldName) {
     var field = document.getElementById(fieldName);
     var editBtn = document.querySelector(`button.edit-btn[onclick="toggleEdit('${fieldName}')"]`);
@@ -66,6 +56,7 @@ function toggleEdit(fieldName) {
     acceptBtn.style.display = field.readOnly ? 'none' : 'inline-block';
 }
 
+// Function to accept user profile changes
 function acceptChanges(fieldName) {
     var field = document.getElementById(fieldName);
     var editBtn = document.querySelector(`button.edit-btn[onclick="toggleEdit('${fieldName}')"]`);
@@ -80,6 +71,7 @@ function acceptChanges(fieldName) {
     acceptBtn.style.display = 'none';
 }
 
+// Function to change value in supabase
 async function changeValue(updatedValue, fieldName) {
     // TODO does not work due to supabase policies
     try {
