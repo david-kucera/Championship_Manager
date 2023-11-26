@@ -3,6 +3,7 @@ document.addEventListener('DOMContentLoaded', async function () {
     const { data, error } = await _supabase.from('drivers').select('*');
 
     const editButton = document.getElementById('editButton');
+    const addButton = document.getElementById('addButton');
     let isEditing = false;
 
     if (error) {
@@ -59,6 +60,7 @@ document.addEventListener('DOMContentLoaded', async function () {
 
     if (isAuthenticated) {
         editButton.style.display = 'block';
+        addButton.style.display = 'block';
     }
 
     editButton.addEventListener('click', function () {
@@ -66,9 +68,58 @@ document.addEventListener('DOMContentLoaded', async function () {
         toggleRemoveButtons(isAuthenticated, isEditing);
     });
 
+    addButton.addEventListener('click', function () {
+        addButton.disabled = true;
+        setTimeout(async function() {
+            await addNewRow();
+            // Re-enable the "Add Row" button after adding the row
+            addButton.disabled = false;
+        }, 0);
+    });
+
     toggleRemoveButtons(isAuthenticated, isEditing);
 
 });
+
+// Function to add a new row to the table
+function addNewRow() {
+    const tableBody = document.getElementById('tbody-leaderboard');
+    const newRow = document.createElement('tr');
+
+    // Create input fields
+    for (let i = 0; i < 5; i++) {
+        const cell = document.createElement('td');
+        const input = document.createElement('input');
+        input.type = 'text';
+        input.className = 'form-control';
+        cell.appendChild(input);
+        newRow.appendChild(cell);
+    }
+
+    const acceptButtonCell = document.createElement('td');
+    const acceptButton = document.createElement('button');
+    acceptButton.textContent = 'Accept';
+    acceptButton.className = 'btn btn-primary btn-sm';
+    acceptButton.onclick = function() {
+        // Call a function to handle the accepted values and insert into the database
+        handleAcceptedValues(newRow);
+
+        resolve();
+    };
+    acceptButtonCell.appendChild(acceptButton);
+    newRow.appendChild(acceptButtonCell);
+
+    tableBody.appendChild(newRow);
+}
+
+// Function to handle the accepted values and insert into the database
+function handleAcceptedValues(newRow) {
+    // TODO: Implement logic to extract values from the input fields and insert into the database
+
+    // Example: Extract values and log to console
+    const values = Array.from(newRow.getElementsByTagName('input')).map(input => input.value);
+    console.log('Accepted values:', values);
+}
 
 // Function to show remove buttons when user is editing
 function toggleRemoveButtons(isAuthenticated, isEditing) {
