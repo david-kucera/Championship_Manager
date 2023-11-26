@@ -2,8 +2,6 @@ let isAuthenticated = document.cookie.includes("isAuthenticated=true");
 const loginLogoutFooter = document.getElementById('login-logout-footer');
 
 function setLoginLogoutLink() {
-    isAuthenticated = document.cookie.includes("isAuthenticated=true");
-
     if (isAuthenticated) {
         document.getElementById('login-option').style.display = 'none';
         document.getElementById('profile-option').style.display = 'block';
@@ -23,6 +21,7 @@ function setLoginLogoutLink() {
     }
 }
 
+// For footer
 function toggleLoginLogout() {
     if (isAuthenticated) {
         // User is logged in, perform logout
