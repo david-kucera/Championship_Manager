@@ -73,7 +73,20 @@ function acceptChanges(fieldName) {
 
 // Function to change value in supabase
 async function changeValue(updatedValue, fieldName) {
-    // TODO does not work due to supabase policies
+    if (fieldName == 'email') {
+        try {
+            const { data, error } = await _supabase.auth.updateUser({email: updatedValue})
+            if (error) {
+                console.error(`Error updating ${fieldName} in Supabase:`, error.message);
+                return;
+            }
+            console.log(`${fieldName} updated successfully in Supabase!`);
+            return;
+        } catch (error) {
+            console.error('Error updating user data in Supabase:', error.message);
+        }
+    }
+
     try {
         const { data, error } = await _supabase
             .from('profiles')
