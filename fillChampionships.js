@@ -40,7 +40,7 @@ document.addEventListener('DOMContentLoaded', async function () {
                 removeButton.textContent = 'Remove';
                 removeButton.className = 'btn btn-danger btn-sm';
                 removeButton.onclick = function() {
-                    removeRow(row.rowIndex);
+                    removeRow(row.rowIndex-1);
                 };
                 removeButtonCell.appendChild(removeButton);
                 row.appendChild(removeButtonCell);
@@ -67,9 +67,21 @@ function toggleRemoveButtons(isAuthenticated, isEditing) {
     });
 }
 
-function removeRow(rowId) {
-    // TODO remove row
-    alert("Row removed: " + rowId);
+// Function to remove a row from the table
+function removeRow(rowIndex) {
+    const tableBody = document.getElementById('tbody_championships');
+    const removedRow = tableBody.rows[rowIndex];
+
+    // Get driver values
+    const name = removedRow.cells[0].textContent;
+
+    removeChampionship(name);
+    tableBody.deleteRow(rowIndex);
+
+    // Refresh the page after a short delay
+    setTimeout(() => {
+        window.location.reload();
+    }, 500);
 }
 
 // Function to add a new row to the table
@@ -126,5 +138,18 @@ async function insertData(data) {
     } catch (error) {
         console.error('Error during inserting data:', error.message);
         alert('Error during inserting data. Please try again.');
+    }
+}
+
+async function removeChampionship(name) {
+    try {
+        const { data, error } = await _supabase
+            .from('championships')
+            .delete()
+            .eq('name', name);
+
+    } catch (error) {
+        console.error('Error during deleting data:', error.message);
+        alert('Error during deleting data. Please try again.');
     }
 }
