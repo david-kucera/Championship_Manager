@@ -16,7 +16,7 @@ document.addEventListener('DOMContentLoaded', async function () {
             const row = document.createElement('tr');
 
             const cell1 = document.createElement('td');
-            cell1.textContent = index + 1;
+            cell1.textContent = index + 1;  // Position
             const cell2 = document.createElement('td');
             cell2.textContent = driver.fullname;
             const cell3 = document.createElement('td');
@@ -48,7 +48,7 @@ document.addEventListener('DOMContentLoaded', async function () {
                 removeButton.textContent = 'Remove';
                 removeButton.className = 'btn btn-danger btn-sm';
                 removeButton.onclick = function() {
-                    removeRow(row.rowIndex);
+                    removeRow(row.rowIndex-1);
                 };
                 removeButtonCell.appendChild(removeButton);
                 row.appendChild(removeButtonCell);
@@ -92,6 +92,12 @@ function addNewRow() {
         const input = document.createElement('input');
         input.type = 'text';
         input.className = 'form-control';
+
+        // Disable the input for the first column
+        if (i === 0) {
+            input.disabled = true;
+        }
+
         cell.appendChild(input);
         newRow.appendChild(cell);
     }
@@ -140,4 +146,40 @@ function toggleRemoveButtons(isAuthenticated, isEditing) {
     removeButtons.forEach(function (button) {
         button.style.display = isAuthenticated && isEditing ? 'block' : 'none';
     });
+}
+
+// Function to remove a row from the table
+function removeRow(rowIndex) {
+    const tableBody = document.getElementById('tbody-leaderboard');
+    const removedRow = tableBody.rows[rowIndex];
+
+    // Get driver values
+    const fullname = removedRow.cells[1].textContent;
+    const nationality = removedRow.cells[2].textContent;
+    const car = removedRow.cells[3].textContent;
+    const points = removedRow.cells[4].textContent;
+
+    removeDriver(fullname, nationality, car, points);
+    tableBody.deleteRow(rowIndex);
+
+    // Refresh the page after a short delay
+    setTimeout(() => {
+        window.location.reload();
+    }, 500);
+}
+
+async function removeDriver(fullname, nationality, car, points) {
+    try {
+        const { data, error } = await _supabase
+            .from('drivers')
+            .delete()
+            .eq('fullname', fullname)
+            .eq('nationality', nationality)
+            .eq('car', car)
+            .eq('points', points);
+
+    } catch (error) {
+        console.error('Error during deleting data:', error.message);
+        alert('Error during deleting data. Please try again.');
+    }
 }
