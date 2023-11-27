@@ -82,8 +82,10 @@ async function changeValue(updatedValue, fieldName) {
             }
             console.log(`${fieldName} updated successfully in Supabase!`);
             return;
+
         } catch (error) {
             console.error('Error updating user data in Supabase:', error.message);
+            return;
         }
     }
 
@@ -98,8 +100,10 @@ async function changeValue(updatedValue, fieldName) {
             return;
         }
         console.log(`${fieldName} updated successfully in Supabase!`);
+        return;
 
     } catch (error) {
         console.error('Error updating user data in Supabase:', error.message);
+        return;
     }
 }

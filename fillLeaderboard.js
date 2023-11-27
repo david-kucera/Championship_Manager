@@ -103,8 +103,6 @@ function addNewRow() {
     acceptButton.onclick = function() {
         // Call a function to handle the accepted values and insert into the database
         handleAcceptedValues(newRow);
-
-        resolve();
     };
     acceptButtonCell.appendChild(acceptButton);
     newRow.appendChild(acceptButtonCell);
@@ -114,11 +112,25 @@ function addNewRow() {
 
 // Function to handle the accepted values and insert into the database
 function handleAcceptedValues(newRow) {
-    // TODO: Implement logic to extract values from the input fields and insert into the database
-
-    // Example: Extract values and log to console
     const values = Array.from(newRow.getElementsByTagName('input')).map(input => input.value);
-    console.log('Accepted values:', values);
+    // Insert values into supabase
+    insertData(values);
+    // Refresh page so the edit is visible
+    setTimeout(function() {
+        window.location.href = "leaderboard.html";
+    }, 500);
+}
+
+async function insertData(data) {
+    try {
+        const { error } = await _supabase
+            .from('drivers')
+            .insert({ fullname: data[1], nationality: data[2], car: data[3], points: data[4]});
+
+    } catch (error) {
+        console.error('Error during inserting data:', error.message);
+        alert('Error during inserting data. Please try again.');
+    }
 }
 
 // Function to show remove buttons when user is editing
@@ -128,13 +140,4 @@ function toggleRemoveButtons(isAuthenticated, isEditing) {
     removeButtons.forEach(function (button) {
         button.style.display = isAuthenticated && isEditing ? 'block' : 'none';
     });
-}
-
-
-function enableEditing() {
-    // TODO
-}
-
-function removeRow(rowIndex) {
-    // TODO
 }
