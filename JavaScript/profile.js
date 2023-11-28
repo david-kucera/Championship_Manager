@@ -73,9 +73,29 @@ function acceptChanges(fieldName) {
 
 // Function to change value in supabase
 async function changeValue(updatedValue, fieldName) {
-    if (fieldName == 'email') {
+    if (fieldName === 'email') {
         try {
             const { data, error } = await _supabase.auth.updateUser({email: updatedValue})
+            if (error) {
+                console.error(`Error updating ${fieldName} in Supabase:`, error.message);
+                return;
+            }
+            console.log(`${fieldName} updated successfully in Supabase!`);
+            alert("Please confirm the changes on both emails to see the new changes!")
+            return;
+
+        } catch (error) {
+            console.error('Error updating user data in Supabase:', error.message);
+            return;
+        }
+    }
+    else {
+        try {
+            const { data, error } = await _supabase
+                .from('profiles')
+                .update({ [fieldName]: updatedValue })
+                .eq('uid', uid);
+
             if (error) {
                 console.error(`Error updating ${fieldName} in Supabase:`, error.message);
                 return;
@@ -87,23 +107,5 @@ async function changeValue(updatedValue, fieldName) {
             console.error('Error updating user data in Supabase:', error.message);
             return;
         }
-    }
-
-    try {
-        const { data, error } = await _supabase
-            .from('profiles')
-            .update({ [fieldName]: updatedValue })
-            .eq('uid', uid);
-
-        if (error) {
-            console.error(`Error updating ${fieldName} in Supabase:`, error.message);
-            return;
-        }
-        console.log(`${fieldName} updated successfully in Supabase!`);
-        return;
-
-    } catch (error) {
-        console.error('Error updating user data in Supabase:', error.message);
-        return;
     }
 }
