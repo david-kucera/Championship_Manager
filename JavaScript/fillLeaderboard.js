@@ -2,8 +2,8 @@ document.addEventListener('DOMContentLoaded', async function () {
     const tableBody = document.getElementById('tbody-leaderboard');
     const { data, error } = await _supabase.from('drivers').select('*');
 
-    const editButton = document.getElementById('editButton');
-    const addButton = document.getElementById('addButton');
+    const editButton = document.getElementById('editLeaderboardButton');
+    const addButton = document.getElementById('addLeaderboardButton');
     let isEditing = false;
 
     if (error) {
@@ -106,7 +106,8 @@ function addNewRow() {
     const acceptButton = document.createElement('button');
     acceptButton.textContent = 'Accept';
     acceptButton.className = 'btn btn-primary btn-sm';
-    acceptButton.onclick = function() {
+    acceptButton.onclick = function () {
+        console.log('Accept button clicked');
         // Call a function to handle the accepted values and insert into the database
         handleAcceptedValues(newRow);
     };
@@ -115,6 +116,8 @@ function addNewRow() {
 
     tableBody.appendChild(newRow);
 }
+
+
 
 // Function to handle the accepted values and insert into the database
 function handleAcceptedValues(newRow) {
