@@ -1,7 +1,6 @@
 document.addEventListener('DOMContentLoaded', async function () {
     const tableBody = document.getElementById('tbody-leaderboard');
     const { data, error } = await _supabase.from('drivers').select('*');
-
     const editButton = document.getElementById('editLeaderboardButton');
     const addButton = document.getElementById('addLeaderboardButton');
     let isEditing = false;
@@ -9,9 +8,7 @@ document.addEventListener('DOMContentLoaded', async function () {
     if (error) {
         console.error('Error fetching data:', error.message);
     } else {
-        // Sort by number of points
         data.sort((a, b) => b.points - a.points);
-
         data.forEach((driver, index) => {
             const row = document.createElement('tr');
 
@@ -32,15 +29,9 @@ document.addEventListener('DOMContentLoaded', async function () {
             row.appendChild(cell4);
             row.appendChild(cell5);
 
-            if (index === 0) {
-                row.classList.add('gold_leaderboard')
-            }
-            if (index === 1) {
-                row.classList.add('silver_leaderboard')
-            }
-            if (index === 2) {
-                row.classList.add('bronze_leaderboard')
-            }
+            if (index === 0) { row.classList.add('gold_leaderboard') }
+            if (index === 1) { row.classList.add('silver_leaderboard') }
+            if (index === 2) { row.classList.add('bronze_leaderboard') }
 
             if (isAuthenticated) {
                 const removeButtonCell = document.createElement('td');
@@ -53,7 +44,6 @@ document.addEventListener('DOMContentLoaded', async function () {
                 removeButtonCell.appendChild(removeButton);
                 row.appendChild(removeButtonCell);
             }
-
             tableBody.appendChild(row);
         });
     }
@@ -72,13 +62,10 @@ document.addEventListener('DOMContentLoaded', async function () {
         addButton.disabled = true;
         setTimeout(async function() {
             await addNewRow();
-            // Re-enable the "Add Row" button after adding the row
             addButton.disabled = false;
         }, 0);
     });
-
     toggleRemoveButtons(isAuthenticated, isEditing);
-
 });
 
 // Function to add a new row to the table
@@ -86,14 +73,12 @@ function addNewRow() {
     const tableBody = document.getElementById('tbody-leaderboard');
     const newRow = document.createElement('tr');
 
-    // Create input fields
     for (let i = 0; i < 5; i++) {
         const cell = document.createElement('td');
         const input = document.createElement('input');
         input.type = 'text';
         input.className = 'form-control';
 
-        // Disable the input for the first column
         if (i === 0) {
             input.disabled = true;
         }
@@ -107,29 +92,23 @@ function addNewRow() {
     acceptButton.textContent = 'Accept';
     acceptButton.className = 'btn btn-primary btn-sm';
     acceptButton.onclick = function () {
-        console.log('Accept button clicked');
-        // Call a function to handle the accepted values and insert into the database
         handleAcceptedValues(newRow);
     };
     acceptButtonCell.appendChild(acceptButton);
     newRow.appendChild(acceptButtonCell);
-
     tableBody.appendChild(newRow);
 }
-
-
 
 // Function to handle the accepted values and insert into the database
 function handleAcceptedValues(newRow) {
     const values = Array.from(newRow.getElementsByTagName('input')).map(input => input.value);
-    // Insert values into supabase
     insertData(values);
-    // Refresh page so the edit is visible
     setTimeout(function() {
         window.location.href = "leaderboard.html";
-    }, 500);
+    }, 100);
 }
 
+// Function to insert data into database
 async function insertData(data) {
     try {
         const { error } = await _supabase
@@ -145,7 +124,6 @@ async function insertData(data) {
 // Function to show remove buttons when user is editing
 function toggleRemoveButtons(isAuthenticated, isEditing) {
     const removeButtons = document.querySelectorAll('.btn-danger');
-
     removeButtons.forEach(function (button) {
         button.style.display = isAuthenticated && isEditing ? 'block' : 'none';
     });
@@ -156,7 +134,6 @@ function removeRow(rowIndex) {
     const tableBody = document.getElementById('tbody-leaderboard');
     const removedRow = tableBody.rows[rowIndex];
 
-    // Get driver values
     const fullname = removedRow.cells[1].textContent;
     const nationality = removedRow.cells[2].textContent;
     const car = removedRow.cells[3].textContent;
@@ -165,12 +142,12 @@ function removeRow(rowIndex) {
     removeDriver(fullname, nationality, car, points);
     tableBody.deleteRow(rowIndex);
 
-    // Refresh the page after a short delay
     setTimeout(() => {
         window.location.reload();
-    }, 500);
+    }, 100);
 }
 
+// Function that removes driver from database.
 async function removeDriver(fullname, nationality, car, points) {
     try {
         const { data, error } = await _supabase

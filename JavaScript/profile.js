@@ -62,7 +62,6 @@ function acceptChanges(fieldName) {
     var editBtn = document.querySelector(`button.edit-btn[onclick="toggleEdit('${fieldName}')"]`);
     var acceptBtn = document.querySelector(`button.accept-btn[onclick="acceptChanges('${fieldName}')"]`);
 
-    // Update the supabase
     var updatedValue = field.value;
     changeValue(updatedValue, fieldName);
 

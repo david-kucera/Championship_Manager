@@ -5,11 +5,9 @@ if (isAuthenticated) {
     addButton.style.display = "block";
 }
 
-
 document.addEventListener('DOMContentLoaded', async function () {
     const tableBody = document.getElementById('tbody_championships');
     const { data, error } = await _supabase.from('championships').select('*');
-
     const editButton = document.getElementById('editButton');
     let isEditing = false;
 
@@ -33,7 +31,6 @@ document.addEventListener('DOMContentLoaded', async function () {
             row.appendChild(cell3);
             row.appendChild(cell4);
 
-            // Add remove button
             if (isAuthenticated) {
                 const removeButtonCell = document.createElement('td');
                 const removeButton = document.createElement('button');
@@ -61,7 +58,6 @@ document.addEventListener('DOMContentLoaded', async function () {
 // Function to show the remove buttons after clicking on edit button
 function toggleRemoveButtons(isAuthenticated, isEditing) {
     const removeButtons = document.querySelectorAll('.btn-danger');
-
     removeButtons.forEach(function (button) {
         button.style.display = isAuthenticated && isEditing ? 'block' : 'none';
     });
@@ -72,16 +68,13 @@ function removeRow(rowIndex) {
     const tableBody = document.getElementById('tbody_championships');
     const removedRow = tableBody.rows[rowIndex];
 
-    // Get driver values
     const name = removedRow.cells[0].textContent;
-
     removeChampionship(name);
     tableBody.deleteRow(rowIndex);
 
-    // Refresh the page after a short delay
     setTimeout(() => {
         window.location.reload();
-    }, 500);
+    }, 100);
 }
 
 // Function to add a new row to the table
@@ -89,14 +82,12 @@ function addNewRow() {
     const tableBody = document.getElementById('tbody_championships');
     const newRow = document.createElement('tr');
 
-    // Create input fields
     for (let i = 0; i < 4; i++) {
         const cell = document.createElement('td');
         const input = document.createElement('input');
         input.type = 'text';
         input.className = 'form-control';
 
-        // Disable the input for the ther columns
         if (i === 1 || i === 2 || i === 3 ) {
             input.disabled = true;
         }
@@ -110,23 +101,19 @@ function addNewRow() {
     acceptButton.textContent = 'Accept';
     acceptButton.className = 'btn btn-primary btn-sm';
     acceptButton.onclick = function() {
-        // Call a function to handle the accepted values and insert into the database
         handleAcceptedValues(newRow);
     };
     acceptButtonCell.appendChild(acceptButton);
     newRow.appendChild(acceptButtonCell);
-
     tableBody.appendChild(newRow);
 }
 
 function handleAcceptedValues(newRow) {
     const values = Array.from(newRow.getElementsByTagName('input')).map(input => input.value);
-    // Insert values into supabase
     insertData(values);
-    // Refresh page so the edit is visible
     setTimeout(function() {
         window.location.href = "championships.html";
-    }, 500);
+    }, 100);
 }
 
 async function insertData(data) {

@@ -3,7 +3,6 @@ document.addEventListener('DOMContentLoaded', function () {
 
     registerForm.addEventListener('submit', async function (event) {
         event.preventDefault();
-
         const email = document.getElementById('email').value;
         const password = document.getElementById('password').value;
 
@@ -12,8 +11,6 @@ document.addEventListener('DOMContentLoaded', function () {
                 email: email,
                 password: password,
             });
-
-            console.log('Sign Up Response:', response);
 
             const { user, error } = response.data;
 
@@ -31,10 +28,8 @@ document.addEventListener('DOMContentLoaded', function () {
                     .insert({ uid: uid, fullname: 'Edit your name', nationality: 'Edit your nationality' });
 
                 if (profileError) {
-                    console.error('Error creating profile:', profileError.message);
                     alert('Error creating profile. Please try again.');
                 } else {
-                    // Redirect to login page
                     setTimeout(function() {
                         window.location.href = "login.html";
                     }, 1000);

@@ -1,9 +1,7 @@
 async function login(event) {
     event.preventDefault();
-
     const mail = document.getElementById('mail').value;
     const password = document.getElementById('password').value;
-
     const loginBtn = document.getElementById('loginBtn');
 
     try {
@@ -19,8 +17,8 @@ async function login(event) {
         if (error) {
             openModal(error.message);
             console.error(error);
-        } else if (data) {
-
+        }
+        else if (data) {
             // Set cookie to know if user is signed in
             document.cookie = "isAuthenticated=true; path=/";
 
@@ -32,7 +30,6 @@ async function login(event) {
             const uid = data.user.id;
             document.cookie = "uid=" + uid;
 
-            // Redirect to index
             setTimeout(function() {
                 window.location.href = "index.html";
             }, 1000);

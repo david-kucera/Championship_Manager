@@ -21,13 +21,11 @@ function setLoginLogoutLink() {
     }
 }
 
-// For footer
+// For footer handling of login/logout button
 function toggleLoginLogout() {
     if (isAuthenticated) {
-        // User is logged in, perform logout
         logout();
     } else {
-        // User is not logged in, redirect to the login page
         window.location.href = "login.html";
     }
 }
