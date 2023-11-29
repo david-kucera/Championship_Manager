@@ -32,6 +32,7 @@ document.addEventListener('DOMContentLoaded', async function () {
             row.appendChild(cell4);
 
             if (isAuthenticated) {
+                // Remove button
                 const removeButtonCell = document.createElement('td');
                 const removeButton = document.createElement('button');
                 removeButton.textContent = 'Remove';
@@ -41,6 +42,16 @@ document.addEventListener('DOMContentLoaded', async function () {
                 };
                 removeButtonCell.appendChild(removeButton);
                 row.appendChild(removeButtonCell);
+                // Edit row button
+                const editRowButtonCell = document.createElement('td');
+                const editRowButton = document.createElement('button');
+                editRowButton.textContent = 'Edit row';
+                editRowButton.className = 'btn btn-warning btn-sm';
+                editRowButton.onclick = function () {
+                    editRow(row.rowIndex-1);
+                };
+                editRowButtonCell.appendChild(editRowButton);
+                row.appendChild(editRowButtonCell);
             }
 
             tableBody.appendChild(row);
@@ -49,10 +60,12 @@ document.addEventListener('DOMContentLoaded', async function () {
 
     editButton.addEventListener('click', function() {
         isEditing = !isEditing;
-       toggleRemoveButtons(isAuthenticated, isEditing);
+        toggleRemoveButtons(isAuthenticated, isEditing);
+        toggleEditButtons(isAuthenticated, isEditing);
     });
 
     toggleRemoveButtons(isAuthenticated, isEditing);
+    toggleEditButtons(isAuthenticated, isEditing);
 });
 
 // Function to show the remove buttons after clicking on edit button
@@ -61,6 +74,88 @@ function toggleRemoveButtons(isAuthenticated, isEditing) {
     removeButtons.forEach(function (button) {
         button.style.display = isAuthenticated && isEditing ? 'block' : 'none';
     });
+}
+
+// Function to show the edit buttons after clicking on edit button
+function toggleEditButtons(isAuthenticated, isEditing) {
+    const editButtons = document.querySelectorAll('.btn-warning');
+    editButtons.forEach(function (button) {
+        button.style.display = isAuthenticated && isEditing ? 'block' : 'none';
+    });
+}
+
+// New name of championship
+let newName;
+
+// Function to edit a row from the table
+function editRow(rowIndex) {
+    const tableBody = document.getElementById('tbody_championships');
+    const editedRow = tableBody.rows[rowIndex];
+
+    const firstCell = editedRow.cells[0];
+    const originalName = firstCell.textContent;
+
+    const input = document.createElement('input');
+    input.type = 'text';
+    input.className = 'form-control';
+    input.value = originalName;
+    firstCell.textContent = '';
+    firstCell.appendChild(input);
+
+    // Change the "Edit row" button to "Save Changes" for the specific row
+    const editButton = editedRow.querySelector('.btn-warning');
+    editButton.textContent = 'Save Changes';
+    editButton.onclick = function () {
+        newName = input.value;
+        saveChanges(rowIndex, originalName);
+    };
+}
+
+// Function to save changes made during row editing
+function saveChanges(rowIndex, originalName) {
+    const tableBody = document.getElementById('tbody_championships');
+    const editedRow = tableBody.rows[rowIndex];
+    const firstCell = editedRow.cells[0];
+
+    updateValue(newName, originalName);
+}
+
+// Function to update row value
+async function updateValue(newName, originalName) {
+    try {
+        const { data, error } = await _supabase
+            .from('championships')
+            .update({ name: newName })
+            .eq('name', originalName);
+
+        if (error) {
+            console.error('Error during updating data:', error.message);
+            alert('Error during updating data. Please try again.');
+        } else {
+            console.log('Data updated successfully:', data);
+            disableRowEditing();
+
+            setTimeout(() => {
+                window.location.reload();
+            }, 100);
+        }
+    } catch (error) {
+        console.error('Error during updating data:', error.message);
+        alert('Error during updating data. Please try again.');
+    }
+}
+
+// Function to disable editing mode for the specific row
+function disableRowEditing() {
+    const tableBody = document.getElementById('tbody_championships');
+    const inputFields = tableBody.querySelectorAll('input');
+    inputFields.forEach(input => {
+        const cell = input.parentElement;
+        cell.textContent = input.value;
+    });
+    isEditing = false;
+    toggleRemoveButtons(isAuthenticated, isEditing);
+    toggleEditButtons(isAuthenticated, isEditing);
 }
 
 // Function to remove a row from the table
