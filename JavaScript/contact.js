@@ -22,3 +22,19 @@ async function submitForm(event) {
         alert("Error sending form: ", error.message)
     }
 }
+
+// Function to get the parameter data from the cookie
+function getCookie(name) {
+    const value = `; ${document.cookie}`;
+    const parts = value.split(`; ${name}=`);
+    if (parts.length === 2) return parts.pop().split(';').shift();
+}
+
+// Set email field value and make it non-editable if the user is authenticated
+window.onload = function () {
+    if (isAuthenticated) {
+        const userEmailField = document.getElementById('userEmail');
+        userEmailField.value = getCookie('userEmail');
+        userEmailField.setAttribute('readonly', true);
+    }
+};

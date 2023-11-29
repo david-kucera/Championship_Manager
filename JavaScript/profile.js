@@ -1,11 +1,11 @@
-// Function to get the UID from the cookie
+// Function to get the parameter data from the cookie
 function getCookie(name) {
     const value = `; ${document.cookie}`;
     const parts = value.split(`; ${name}=`);
     if (parts.length === 2) return parts.pop().split(';').shift();
 }
 
-// Get UID from the cookie
+// Get UID and mail from the cookie
 const uid = getCookie('uid');
 const mail = getCookie('userEmail')
 
