@@ -54,7 +54,7 @@
   <p>
     Feel free to contact us with any question or problem you may encounter while using our application!
   </p>
-  <form id="contactForm">
+  <form id="contactForm" action="#" method="post" onsubmit="submitForm(event)">
     <div class="form-group">
       <label for="userEmail">Your Email:</label>
       <input type="email" class="form-control" id="userEmail" name="userEmail" required>
@@ -84,6 +84,7 @@
 
 <script src="JavaScript/authentication.js"></script>
 <script src="JavaScript/logout.js"></script>
+<script src="JavaScript/contact.js"></script>
 
 </body>
 </html>
