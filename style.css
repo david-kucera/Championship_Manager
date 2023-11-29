@@ -93,3 +93,8 @@ img {
     font-weight: bold;
     font-size: x-large;
 }
+
+.button-container {
+    display: flex;
+    gap: 10px;
+}
