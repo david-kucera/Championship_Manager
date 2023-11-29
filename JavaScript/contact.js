@@ -4,11 +4,12 @@ async function submitForm(event) {
 
     const userEmail = document.getElementById('userEmail').value;
     const message = document.getElementById('message').value;
+    const timestamp = new Date();
 
     try {
         const { data, error } = await _supabase
             .from('contactFormSubmissions')
-            .insert([{ userEmail, message }]);
+            .insert([{ userEmail, message, timestamp }]);
 
         if (error) {
             alert("Error sending form: ", error.message)
