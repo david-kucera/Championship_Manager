@@ -1,7 +1,6 @@
 // Function that sends message to the database
 async function submitForm(event) {
     event.preventDefault();
-
     const userEmail = document.getElementById('userEmail').value;
     const message = document.getElementById('message').value;
     const timestamp = new Date();
@@ -13,7 +12,6 @@ async function submitForm(event) {
 
         if (error) {
             alert("Error sending form: ", error.message)
-            console.error('Error submitting form:', error.message);
         } else {
             alert("Message successfully sent!");
             setTimeout(function() {
@@ -21,6 +19,6 @@ async function submitForm(event) {
             }, 1000);
         }
     } catch (error) {
-        console.error('Unexpected error during form submission:', error.message);
+        alert("Error sending form: ", error.message)
     }
 }
