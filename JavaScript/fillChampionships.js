@@ -14,6 +14,7 @@ document.addEventListener('DOMContentLoaded', async function () {
     if (error) {
         console.error('Error fetching data:', error.message);
     } else {
+        data.sort((a, b) => a.name.localeCompare(b.name));
         data.forEach((championship) => {
             const row = document.createElement('tr');
 
