@@ -8,7 +8,14 @@ document.addEventListener('DOMContentLoaded', async function () {
     if (error) {
         console.error('Error fetching data:', error.message);
     } else {
-        data.sort((a, b) => b.points - a.points);
+        data.sort((a, b) => {
+            if (b.points !== a.points) {
+                return b.points - a.points;
+            } else {
+                return a.fullname.localeCompare(b.fullname);
+            }
+        });
+
         data.forEach((driver, index) => {
             const row = document.createElement('tr');
 
