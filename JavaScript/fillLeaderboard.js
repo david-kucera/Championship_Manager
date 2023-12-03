@@ -3,6 +3,8 @@ document.addEventListener('DOMContentLoaded', async function () {
     const { data, error } = await _supabase.from('drivers').select('*');
     const editButton = document.getElementById('editLeaderboardButton');
     const addButton = document.getElementById('addLeaderboardButton');
+    editButton.style.display = 'none';
+    addButton.style.display = 'none';
     let isEditing = false;
 
     if (error) {
@@ -41,15 +43,32 @@ document.addEventListener('DOMContentLoaded', async function () {
             if (index === 2) { row.classList.add('bronze_leaderboard') }
 
             if (isAuthenticated) {
+                // Remove buttons
                 const removeButtonCell = document.createElement('td');
                 const removeButton = document.createElement('button');
                 removeButton.textContent = 'Remove';
-                removeButton.className = 'btn btn-danger btn-sm';
-                removeButton.onclick = function() {
-                    removeRow(row.rowIndex-1);
+                removeButton.className = 'btn btn-danger';
+                removeButton.style.padding = '0.375rem 0.75rem';
+                removeButton.style.fontSize = '1rem';
+                removeButton.onclick = function () {
+                    removeRow(row.rowIndex - 1);
                 };
                 removeButtonCell.appendChild(removeButton);
                 row.appendChild(removeButtonCell);
+
+                // Edit row buttons
+                const editRowButtonCell = document.createElement('td');
+                const editRowButton = document.createElement('button');
+                editRowButton.textContent = 'Edit row';
+                editRowButton.className = 'btn btn-warning';
+                editRowButton.style.padding = '0.375rem 0.75rem';
+                editRowButton.style.fontSize = '1rem';
+                editRowButton.style.display = 'none';
+                editRowButton.onclick = function () {
+                    editRow(index);
+                };
+                editRowButtonCell.appendChild(editRowButton);
+                row.appendChild(editRowButtonCell);
             }
             tableBody.appendChild(row);
         });
@@ -62,6 +81,8 @@ document.addEventListener('DOMContentLoaded', async function () {
 
     editButton.addEventListener('click', function () {
         isEditing = !isEditing;
+        const isVisible = isEditing; // Change this based on your logic
+        toggleEditButtons(isAuthenticated, isEditing, isVisible);
         toggleRemoveButtons(isAuthenticated, isEditing);
     });
 
@@ -72,7 +93,9 @@ document.addEventListener('DOMContentLoaded', async function () {
             addButton.disabled = false;
         }, 0);
     });
+
     toggleRemoveButtons(isAuthenticated, isEditing);
+    toggleEditButtons(isAuthenticated, isEditing, false);
 });
 
 // Function to add a new row to the table
@@ -170,3 +193,137 @@ async function removeDriver(fullname, nationality, car, points) {
         alert('Error during deleting data. Please try again.');
     }
 }
+
+// Modify the toggleEditButtons function
+function toggleEditButtons(isAuthenticated, isEditing, isVisible) {
+    const editButtons = document.querySelectorAll('.btn-warning');
+    editButtons.forEach(function (button) {
+        button.style.display = isAuthenticated && isEditing && isVisible ? 'block' : 'none';
+    });
+}
+
+// Function to edit row in table
+function editRow(rowIndex) {
+    const tableBody = document.getElementById('tbody-leaderboard');
+    const editedRow = tableBody.rows[rowIndex];
+
+    // Check if the row is in edit mode
+    const isInEditMode = editedRow.querySelector('.btn-warning').textContent === 'Save';
+
+    if (isInEditMode) {
+        // If in edit mode, get the inputs directly
+        const inputs = editedRow.querySelectorAll('input');
+        const originalValues = Array.from(inputs).map(input => input.value);
+
+        // Skip the first and last cells which should not be editable
+        for (let i = 1; i < inputs.length - 2; i++) {
+            const cell = editedRow.cells[i];
+            cell.textContent = inputs[i].value;
+        }
+
+        // Change the "Save Changes" button back to "Edit row"
+        const editButton = editedRow.querySelector('.btn-warning');
+        editButton.textContent = 'Edit row';
+        editButton.onclick = function () {
+            editRow(rowIndex);
+        };
+
+    } else {
+        // If not in edit mode, show inputs for editing
+        const cells = editedRow.cells;
+        const originalValues = Array.from(cells).map(cell => cell.textContent);
+
+        // Skip the first and last cells which should not be editable
+        for (let i = 1; i < cells.length - 1; i++) {
+            // Check if the cell is editable
+            if (isCellEditable(cells, i)) {
+                const input = document.createElement('input');
+                input.type = 'text';
+                input.className = 'form-control';
+                input.value = originalValues[i];
+                cells[i].textContent = '';
+                cells[i].appendChild(input);
+            }
+        }
+
+        // Change the "Edit row" button to "Save Changes"
+        const editButton = editedRow.querySelector('.btn-warning');
+        editButton.textContent = 'Save';
+        editButton.onclick = function () {
+            saveChanges(rowIndex, originalValues);
+        };
+    }
+}
+
+// Function to check if a cell should be editable
+function isCellEditable(cells, index) {
+    const editRowButtonCellIndex = cells.length - 2;
+    return index !== 0 && index !== editRowButtonCellIndex;
+}
+
+// Function to save changes
+function saveChanges(rowIndex, originalValues) {
+    const tableBody = document.getElementById('tbody-leaderboard');
+    const editedRow = tableBody.rows[rowIndex];
+    const inputFields = editedRow.querySelectorAll('input');
+
+    // Check if all input values exist before updating
+    if (areAllInputsValid(inputFields)) {
+        const newValues = Array.from(inputFields).map(input => input.value);
+        updateValues(newValues, originalValues);
+    } else {
+        console.error('Error: One or more input fields are null.');
+    }
+}
+
+// Function to check if all input values are valid
+function areAllInputsValid(inputFields) {
+    return Array.from(inputFields).every(input => input && input.value !== undefined && input.value !== null);
+}
+
+// Function to save changes into supabase
+async function updateValues(newValues, originalValues) {
+    try {
+        const { data, error } = await _supabase
+            .from('drivers')
+            .update({
+                fullname: newValues[0],
+                nationality: newValues[1],
+                car: newValues[2],
+                points: newValues[3]
+            })
+            .eq('fullname', originalValues[1])
+            .eq('nationality', originalValues[2])
+            .eq('car', originalValues[3])
+            .eq('points', originalValues[4]);
+
+        if (error) {
+            console.error('Error during updating data:', error.message);
+            alert('Error during updating data. Please try again.');
+        } else {
+            console.log('Data updated successfully:', data);
+            disableRowEditing();
+
+            setTimeout(() => {
+                window.location.reload();
+            }, 100);
+        }
+    } catch (error) {
+        console.error('Error during updating data:', error.message);
+        alert('Error during updating data. Please try again.');
+    }
+}
+
+// Function to disable editing mode for the specific row
+function disableRowEditing() {
+    const tableBody = document.getElementById('tbody-leaderboard');
+    const inputFields = tableBody.querySelectorAll('input');
+    inputFields.forEach(input => {
+        const cell = input.parentElement;
+        cell.textContent = input.value;
+    });
+    isEditing = false;
+    toggleRemoveButtons(isAuthenticated, isEditing);
+    toggleEditButtons(isAuthenticated, isEditing);
+}
+
