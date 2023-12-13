@@ -117,12 +117,15 @@ function saveChanges(rowIndex, originalName) {
     const tableBody = document.getElementById('tbody_championships');
     const editedRow = tableBody.rows[rowIndex];
     const firstCell = editedRow.cells[0];
-
     updateValue(newName, originalName);
 }
 
 // Function to update row value
 async function updateValue(newName, originalName) {
+    if (newName === originalName) {
+        openModal('Name of championship must be different!');
+        return;
+    }
     try {
         const { data, error } = await _supabase
             .from('championships')
@@ -131,9 +134,10 @@ async function updateValue(newName, originalName) {
 
         if (error) {
             console.error('Error during updating data:', error.message);
-            alert('Error during updating data. Please try again.');
+            openModal('Error during updating data!');
         } else {
             console.log('Data updated successfully:', data);
+            openModal('Data updated sucessfully!');
             disableRowEditing();
 
             setTimeout(() => {
@@ -142,7 +146,7 @@ async function updateValue(newName, originalName) {
         }
     } catch (error) {
         console.error('Error during updating data:', error.message);
-        alert('Error during updating data. Please try again.');
+        openModal('Error during updating data!');
     }
 }
 
@@ -163,7 +167,6 @@ function disableRowEditing() {
 function removeRow(rowIndex) {
     const tableBody = document.getElementById('tbody_championships');
     const removedRow = tableBody.rows[rowIndex];
-
     const name = removedRow.cells[0].textContent;
     removeChampionship(name);
     tableBody.deleteRow(rowIndex);
@@ -207,22 +210,29 @@ function addNewRow() {
 function handleAcceptedValues(newRow) {
     const values = Array.from(newRow.getElementsByTagName('input')).map(input => input.value);
     insertData(values);
-    setTimeout(function() {
-        window.location.href = "championships.html";
-    }, 100);
 }
 
-async function insertData(data) {
+async function insertData(insertData) {
+    // Add to database
     try {
         const { error } = await _supabase
             .from('championships')
-            .insert({ name: data[0]});
+            .insert({ name: insertData[0] });
 
+        if (error) {
+            console.error('Error during inserting data:', error.message);
+            openModal('Error during inserting data.');
+        }
     } catch (error) {
         console.error('Error during inserting data:', error.message);
-        alert('Error during inserting data. Please try again.');
+        openModal('Error during inserting data.');
     }
+    openModal("Sucessfully added!");
+    setTimeout(function() {
+        window.location.href = "championships.html";
+    }, 1000);
 }
+
 
 async function removeChampionship(name) {
     try {
@@ -233,6 +243,6 @@ async function removeChampionship(name) {
 
     } catch (error) {
         console.error('Error during deleting data:', error.message);
-        alert('Error during deleting data. Please try again.');
+        openModal('Erro during deleting data.');
     }
 }
