@@ -17,7 +17,7 @@ document.addEventListener('DOMContentLoaded', function () {
             if (error) {
                 openModal(error.message);
             } else if (user) {
-                alert('Registration successful!');
+                openModal('Registration successfull!\nNow log in!');
 
                 // Get user uid
                 const uid = user.id;
@@ -25,13 +25,13 @@ document.addEventListener('DOMContentLoaded', function () {
                 // Insert new profile into profiles table
                 const { error: profileError } = await _supabase
                     .from('profiles')
-                    .insert({ uid: uid, fullname: 'Edit your name', nationality: 'Edit your nationality' });
+                    .insert({ uid: uid, fullname: '***', nationality: '***' });
 
                 if (profileError) {
                     openModal('Error creating profile. Please try again.');
                 } else {
                     setTimeout(function() {
-                        window.location.reload();
+                        window.location.href = "login.html";
                     }, 1000);
                 }
             }
