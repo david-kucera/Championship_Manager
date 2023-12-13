@@ -17,6 +17,7 @@ async function populateNameNationality() {
 
             if (error) {
                 console.error('Error fetching profiles data:', error.message);
+                openModal('Error fetching profiles data!');
                 return;
             }
 
@@ -26,11 +27,12 @@ async function populateNameNationality() {
                 document.getElementById('fullname').value = data.fullname || '';
                 document.getElementById('nationality').value = data.nationality || '';
             } else {
-                console.log('User data not found in the profiles table.');
+                openModal('User data not found in the profiles table!');
             }
 
         } catch (error) {
             console.error('Error fetching user data:', error.message);
+            openModal('Error fetching user data!');
         }
     }
 }
@@ -70,14 +72,15 @@ async function changeValue(updatedValue, fieldName) {
             const { data, error } = await _supabase.auth.updateUser({email: updatedValue})
             if (error) {
                 console.error(`Error updating ${fieldName} in Supabase:`, error.message);
+                openModal(`Error updating ${fieldName} in Supabase!`);
                 return;
             }
-            console.log(`${fieldName} updated successfully in Supabase!`);
-            alert("Please confirm the changes on both emails to see the new changes!")
+            openModal("Please confirm the changes on both emails to see the new changes!");
             return;
 
         } catch (error) {
             console.error('Error updating user data in Supabase:', error.message);
+            openModal('Error updating user data in Supabase!');
             return;
         }
     }
@@ -90,13 +93,15 @@ async function changeValue(updatedValue, fieldName) {
 
             if (error) {
                 console.error(`Error updating ${fieldName} in Supabase:`, error.message);
+                openModal('Error updating field in Supabase!');
                 return;
             }
-            console.log(`${fieldName} updated successfully in Supabase!`);
+            openModal(`${fieldName} updated sucessfully in Supabase!`);
             return;
 
         } catch (error) {
             console.error('Error updating user data in Supabase:', error.message);
+            openModal('Error updating user data in Supabase!');
             return;
         }
     }
