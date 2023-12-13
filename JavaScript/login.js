@@ -19,7 +19,6 @@ async function login(event) {
             console.error(error);
         }
         else if (data) {
-            openModal('Welcome back!');
             // Set cookie to know if user is signed in
             document.cookie = "isAuthenticated=true; path=/";
 

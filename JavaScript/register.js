@@ -15,7 +15,7 @@ document.addEventListener('DOMContentLoaded', function () {
             const { user, error } = response.data;
 
             if (error) {
-                alert(error.message);
+                openModal(error.message);
             } else if (user) {
                 alert('Registration successful!');
 
@@ -28,16 +28,16 @@ document.addEventListener('DOMContentLoaded', function () {
                     .insert({ uid: uid, fullname: 'Edit your name', nationality: 'Edit your nationality' });
 
                 if (profileError) {
-                    alert('Error creating profile. Please try again.');
+                    openModal('Error creating profile. Please try again.');
                 } else {
                     setTimeout(function() {
-                        window.location.href = "login.html";
+                        window.location.reload();
                     }, 1000);
                 }
             }
         } catch (error) {
             console.error('Error during registration:', error.message);
-            alert('Error during registration. Please try again.');
+            openModal('Error during registration. Please try again.');
         }
     });
 });
