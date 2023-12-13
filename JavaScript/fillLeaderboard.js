@@ -9,6 +9,7 @@ document.addEventListener('DOMContentLoaded', async function () {
 
     if (error) {
         console.error('Error fetching data:', error.message);
+        openModal('Error fetching data!');
     } else {
         data.sort((a, b) => {
             if (b.points !== a.points) {
@@ -133,9 +134,6 @@ function addNewRow() {
 function handleAcceptedValues(newRow) {
     const values = Array.from(newRow.getElementsByTagName('input')).map(input => input.value);
     insertData(values);
-    setTimeout(function() {
-        window.location.href = "leaderboard.html";
-    }, 100);
 }
 
 // Function to insert data into database
@@ -147,8 +145,12 @@ async function insertData(data) {
 
     } catch (error) {
         console.error('Error during inserting data:', error.message);
-        alert('Error during inserting data. Please try again.');
+        openModal('Error during inserting data. Please try again.');
     }
+    openModal("Sucessfully added!");
+    setTimeout(function() {
+        window.location.reload();
+    }, 1000);
 }
 
 // Function to show remove buttons when user is editing
@@ -190,7 +192,7 @@ async function removeDriver(fullname, nationality, car, points) {
 
     } catch (error) {
         console.error('Error during deleting data:', error.message);
-        alert('Error during deleting data. Please try again.');
+        openModal('Error during deleting data. Please try again.');
     }
 }
 
@@ -273,6 +275,7 @@ function saveChanges(rowIndex, originalValues) {
         updateValues(newValues, originalValues);
     } else {
         console.error('Error: One or more input fields are null.');
+        openModal('Error: One or more input fields are null.');
     }
 }
 
@@ -299,9 +302,9 @@ async function updateValues(newValues, originalValues) {
 
         if (error) {
             console.error('Error during updating data:', error.message);
-            alert('Error during updating data. Please try again.');
+            openModal('Error during updating data. Please try again.');
         } else {
-            console.log('Data updated successfully:', data);
+            openModal('Data updated sucessfully!');
             disableRowEditing();
 
             setTimeout(() => {
@@ -310,7 +313,7 @@ async function updateValues(newValues, originalValues) {
         }
     } catch (error) {
         console.error('Error during updating data:', error.message);
-        alert('Error during updating data. Please try again.');
+        openModal('Error during updating data. Please try again.');
     }
 }
 

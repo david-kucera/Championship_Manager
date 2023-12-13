@@ -229,7 +229,7 @@ async function insertData(insertData) {
     }
     openModal("Sucessfully added!");
     setTimeout(function() {
-        window.location.href = "championships.html";
+        window.location.reload();
     }, 1000);
 }
 
