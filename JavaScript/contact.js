@@ -11,15 +11,15 @@ async function submitForm(event) {
             .insert([{ userEmail, message, timestamp }]);
 
         if (error) {
-            alert("Error sending form: ", error.message)
+            openModal("Error sendinng form!");
         } else {
-            alert("Message successfully sent!");
+            openModal("Message successfully sent!");
             setTimeout(function() {
                 window.location.href = "contact.html";
             }, 1000);
         }
     } catch (error) {
-        alert("Error sending form: ", error.message)
+        openModal("Error sending form!");
     }
 }
 
