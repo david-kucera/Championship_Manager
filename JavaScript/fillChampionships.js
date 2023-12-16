@@ -21,11 +21,11 @@ document.addEventListener('DOMContentLoaded', async function () {
             const cell1 = document.createElement('td');
             cell1.textContent = championship.name;
             const cell2 = document.createElement('td');
-            cell2.textContent = "null";
+            cell2.textContent = championship.startDate;
             const cell3 = document.createElement('td');
-            cell3.textContent = "null";
+            cell3.textContent = championship.endDate;
             const cell4 = document.createElement('td');
-            cell4.textContent = "null";
+            cell4.textContent = championship.description;
 
             row.appendChild(cell1);
             row.appendChild(cell2);
