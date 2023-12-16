@@ -25,7 +25,10 @@ document.addEventListener('DOMContentLoaded', async function () {
             const cell1 = document.createElement('td');
             cell1.textContent = index + 1;  // Position
             const cell2 = document.createElement('td');
-            cell2.textContent = driver.fullname;
+            const link = document.createElement('a');
+            link.href = `driverprofile.html?driverId=${driver.id}`;
+            link.textContent = driver.fullname;
+            cell2.appendChild(link);
             const cell3 = document.createElement('td');
             cell3.textContent = driver.nationality;
             const cell4 = document.createElement('td');
