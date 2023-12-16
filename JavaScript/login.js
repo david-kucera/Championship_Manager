@@ -36,21 +36,10 @@ async function login(event) {
         }
     } catch (error) {
         console.error('Error during login:', error.message);
+        openModal('Error during login!');
     } finally {
         // Hide spinner and enable the login button
         loginBtn.innerHTML = 'Submit';
         loginBtn.disabled = false;
     }
-}
-
-// Function to open the Bootstrap modal
-function openModal(message) {
-    const errorMessage = document.getElementById('error-message');
-    errorMessage.textContent = message;
-    $('#errorModal').modal('show');
-}
-
-// Function to close the Bootstrap modal
-function closeModal() {
-    $('#errorModal').modal('hide');
 }
