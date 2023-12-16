@@ -20,7 +20,7 @@ document.addEventListener('DOMContentLoaded', async function () {
 
             const cell1 = document.createElement('td');
             const link = document.createElement('a');
-            link.href = `championship.html?championshipId=${championship.id}`; // Use the unique identifier
+            link.href = `championship.html?championshipId=${championship.id}`;
             link.textContent = championship.name;
             cell1.appendChild(link);
             const cell2 = document.createElement('td');
