@@ -19,7 +19,10 @@ document.addEventListener('DOMContentLoaded', async function () {
             const row = document.createElement('tr');
 
             const cell1 = document.createElement('td');
-            cell1.textContent = championship.name;
+            const link = document.createElement('a');
+            link.href = `championship.html?championshipId=${championship.id}`; // Use the unique identifier
+            link.textContent = championship.name;
+            cell1.appendChild(link);
             const cell2 = document.createElement('td');
             cell2.textContent = championship.startDate;
             const cell3 = document.createElement('td');
