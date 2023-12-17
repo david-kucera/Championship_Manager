@@ -22,6 +22,7 @@ async function fetchAndDisplayChampionshipData(championshipId) {
 
     const championship = data[0];
     if (championship) {
+        document.title = championship.name + " | Championship Manager";
         document.getElementById('championship-name').textContent = championship.name;
         document.getElementById('start-date').textContent = championship.startDate;
         document.getElementById('end-date').textContent = championship.endDate;

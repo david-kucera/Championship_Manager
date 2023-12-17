@@ -26,7 +26,7 @@ document.addEventListener('DOMContentLoaded', async function () {
             cell1.textContent = index + 1;  // Position
             const cell2 = document.createElement('td');
             const link = document.createElement('a');
-            link.href = `driverprofile.html?driverId=${driver.id}`;
+            link.href = `driver_profile.html?driverId=${driver.id}`;
             link.textContent = driver.fullname;
             cell2.appendChild(link);
             const cell3 = document.createElement('td');
