@@ -1,4 +1,4 @@
-if (isAuthenticated) {
+if (isAuthenticated && isAdmin) {
     var editButton = document.getElementById("editButton");
     var addButton = document.getElementById("addButton")
     editButton.style.display = "block";
@@ -35,7 +35,7 @@ document.addEventListener('DOMContentLoaded', async function () {
             row.appendChild(cell3);
             row.appendChild(cell4);
 
-            if (isAuthenticated) {
+            if (isAuthenticated && isAdmin) {
                 // Remove button
                 const removeButtonCell = document.createElement('td');
                 const removeButton = document.createElement('button');

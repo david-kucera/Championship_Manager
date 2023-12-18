@@ -60,7 +60,7 @@ document.addEventListener('DOMContentLoaded', async function () {
             if (index === 1) { row.classList.add('silver_leaderboard') }
             if (index === 2) { row.classList.add('bronze_leaderboard') }
 
-            if (isAuthenticated) {
+            if (isAuthenticated && isAdmin) {
                 // Remove buttons
                 const removeButtonCell = document.createElement('td');
                 const removeButton = document.createElement('button');
@@ -92,7 +92,7 @@ document.addEventListener('DOMContentLoaded', async function () {
         });
     }
 
-    if (isAuthenticated) {
+    if (isAuthenticated && isAdmin) {
         editButton.style.display = 'block';
         addButton.style.display = 'block';
     }
