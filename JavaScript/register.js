@@ -25,7 +25,7 @@ document.addEventListener('DOMContentLoaded', function () {
                 // Insert new profile into profiles table
                 const { error: profileError } = await _supabase
                     .from('profiles')
-                    .insert({ uid: uid, fullname: '***', nationality: '***' });
+                    .insert({ uid: uid, fullname: '***', nationality: '***', date_of_birth: '***', role: 'user', description: '***' });
 
                 if (profileError) {
                     openModal('Error creating profile. Please try again.');
@@ -36,7 +36,6 @@ document.addEventListener('DOMContentLoaded', function () {
                 }
             }
         } catch (error) {
-            console.error('Error during registration:', error.message);
             openModal('Error during registration. Please try again.');
         }
     });

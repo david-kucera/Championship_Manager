@@ -108,7 +108,20 @@
                 <button class="btn btn-primary edit-btn" onclick="toggleEdit('email')">Edit</button>
                 <button class="btn btn-success accept-btn" onclick="acceptChanges('email')" style="display: none;">Accept Changes</button>
             </div>
-            <small>Changes made to email adress will show after logging out and logging back again with new email.</small>
+            <small>Changes made to email address will show after logging out and logging back again with new email.</small>
+        </div>
+
+        <div class="margin-top-30">
+            <div class="form-row">
+                <div class="form-group col-md-6">
+                    <button class="btn btn-warning driver-btn" onclick="becomeADriver()">I am a driver</button>
+                </div>
+            </div>
+            <div class="form-row">
+                <div class="form-group col-md-6">
+                    <small class="text-danger">Warning: This action cannot be undone! After clicking this button, your profile information will become visible.</small>
+                </div>
+            </div>
         </div>
     </div>
 </div>
@@ -128,7 +141,5 @@
 <script src="JavaScript/profile.js"></script>
 <script src="JavaScript/authentication.js"></script>
 <script src="JavaScript/logout.js"></script>
-<script src="JavaScript/logout.js"></script>
-
 </body>
 </html>

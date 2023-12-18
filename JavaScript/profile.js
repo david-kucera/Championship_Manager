@@ -106,3 +106,23 @@ async function changeValue(updatedValue, fieldName) {
         }
     }
 }
+
+const driverButton = document.querySelector('.driver-btn');
+driverButton.addEventListener('click', becomeADriver);
+
+async function becomeADriver() {
+    const { data, error } = await _supabase
+        .from('drivers')
+        .insert([{ uid: uid, car: '***', points: 0 }]);
+
+    if (error) {
+        console.error('Error inserting into drivers table:', error.message);
+        openModal('Error becoming a driver. Please try again.');
+    } else {
+        console.log('Successfully became a driver:', data);
+        openModal('You are now registered as a driver!');
+        setTimeout(function() {
+            window.location.href = "profile.html";
+        }, 1000);
+    }
+}
