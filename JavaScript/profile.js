@@ -1,9 +1,10 @@
 // Get UID and mail from the cookie
 const uid = getCookie('uid');
 const mail = getCookie('userEmail')
+const role = getCookie('role');
 
 // Function to fill the fields of user profile
-async function populateNameNationality() {
+async function populateFields() {
     if (isAuthenticated) {
         document.getElementById('email').value = mail || '';
 
@@ -27,6 +28,12 @@ async function populateNameNationality() {
                 document.getElementById('nationality').value = data.nationality || '';
                 document.getElementById('date_of_birth').value = data.date_of_birth || '';
                 document.getElementById('description').value = data.description || '';
+
+                // Hide the last div if user is already a driver
+                const driverButtonDiv = document.querySelector('.margin-top-30');
+                if (driverButtonDiv) {
+                    driverButtonDiv.style.display = role !== 'driver' ? 'block' : 'none';
+                }
             } else {
                 openModal('User data not found in the profiles table!');
             }
@@ -39,7 +46,7 @@ async function populateNameNationality() {
 }
 
 // Call the function to populate user data when the page loads
-document.addEventListener('DOMContentLoaded', populateNameNationality);
+document.addEventListener('DOMContentLoaded', populateFields);
 
 // Function to change button when user wants to edit fields
 function toggleEdit(fieldName) {
@@ -116,11 +123,25 @@ async function becomeADriver() {
     if (error) {
         console.error('Error inserting into drivers table:', error.message);
         openModal('Error becoming a driver. Please try again.');
-    } else {
-        console.log('Successfully became a driver:', data);
-        openModal('You are now registered as a driver!');
-        setTimeout(function() {
-            window.location.href = "profile.html";
-        }, 1000);
+        return;
     }
+
+    const { data: profileData, error: profileError } = await _supabase
+        .from('profiles')
+        .update({ role: 'driver' })
+        .eq('uid', uid);
+
+    if (profileError) {
+        console.error('Error updating role in profiles table:', profileError.message);
+        openModal('Error updating your role. Please contact support.');
+        return;
+    }
+
+    console.log('Successfully became a driver:', data);
+    openModal('You are now registered as a driver!');
+    document.cookie = 'role=driver; path=/';
+
+    setTimeout(function() {
+        window.location.href = "profile.html";
+    }, 1000);
 }
