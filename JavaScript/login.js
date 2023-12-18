@@ -30,6 +30,9 @@ async function login(event) {
             const uid = data.user.id;
             document.cookie = "uid=" + uid;
 
+            // Set role to user
+            setUserRole(uid);
+
             setTimeout(function() {
                 window.location.href = "index.html";
             }, 1000);
@@ -41,5 +44,32 @@ async function login(event) {
         // Hide spinner and enable the login button
         loginBtn.innerHTML = 'Submit';
         loginBtn.disabled = false;
+    }
+}
+
+async function setUserRole(uid) {
+    try {
+        const {data, error} = await _supabase
+            .from('profiles')
+            .select('role')
+            .eq('uid', uid)
+            .single();
+
+        if (error) {
+            console.error('Error fetching role:', error.message);
+            openModal('Error fetching user role!');
+            return;
+        }
+
+        if (data && data.role) {
+            document.cookie = 'role=' + data.role + '; path=/';
+        } else {
+            console.error('User role not found.');
+            openModal('User role not found!');
+        }
+
+    } catch (error) {
+        console.error('Error fetching user role:', error.message);
+        openModal('Error fetching user role!');
     }
 }
