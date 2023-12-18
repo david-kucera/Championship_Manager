@@ -1,6 +1,19 @@
 document.addEventListener('DOMContentLoaded', async function () {
     const tableBody = document.getElementById('tbody-leaderboard');
-    const { data, error } = await _supabase.from('drivers').select('*');
+
+    const { data, error } = await _supabase
+        .from('profiles')
+        .select(`
+            uid,
+            fullname,
+            nationality,
+            drivers!inner (
+              id,
+              car,
+              points
+            )
+          `);
+    console.log(data);
     const editButton = document.getElementById('editLeaderboardButton');
     const addButton = document.getElementById('addLeaderboardButton');
     editButton.style.display = 'none';
@@ -19,7 +32,8 @@ document.addEventListener('DOMContentLoaded', async function () {
             }
         });
 
-        data.forEach((driver, index) => {
+        data.forEach((profile, index) => {
+            const driver = profile.drivers[0];
             const row = document.createElement('tr');
 
             const cell1 = document.createElement('td');
@@ -27,10 +41,10 @@ document.addEventListener('DOMContentLoaded', async function () {
             const cell2 = document.createElement('td');
             const link = document.createElement('a');
             link.href = `driver_profile.html?driverId=${driver.id}`;
-            link.textContent = driver.fullname;
+            link.textContent = profile.fullname;
             cell2.appendChild(link);
             const cell3 = document.createElement('td');
-            cell3.textContent = driver.nationality;
+            cell3.textContent = profile.nationality;
             const cell4 = document.createElement('td');
             cell4.textContent = driver.car;
             const cell5 = document.createElement('td');
