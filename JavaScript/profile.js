@@ -38,6 +38,25 @@ async function populateFields() {
                 openModal('User data not found in the profiles table!');
             }
 
+            if (role === 'driver') {
+                const carData = await _supabase
+                    .from('drivers')
+                    .select('car')
+                    .eq('uid', uid)
+                    .single();
+
+                if (carData.error) {
+                    throw carData.error;
+                }
+
+                if (carData.data) {
+                    document.getElementById('car').value = carData.data.car || '';
+                    document.getElementById('car').parentNode.style.display = 'block'; // Show car field
+                }
+            } else {
+                document.getElementById('car').parentNode.style.display = 'none'; // Hide car field
+            }
+
         } catch (error) {
             console.error('Error fetching user data:', error.message);
             openModal('Error fetching user data!');
@@ -90,6 +109,22 @@ async function changeValue(updatedValue, fieldName) {
             console.error('Error updating user data in Supabase:', error.message);
             openModal('Error updating user data in Supabase!');
             return;
+        }
+    }
+    else if (fieldName === 'car' && role === 'driver') {
+        try {
+            const { data, error } = await _supabase
+                .from('drivers')
+                .update({ car: updatedValue })
+                .eq('uid', uid);
+
+            if (error) {
+                throw error;
+            }
+            openModal('Car updated successfully in Supabase!');
+        } catch (error) {
+            console.error('Error updating car in Supabase:', error.message);
+            openModal('Error updating car in Supabase!');
         }
     }
     else {
