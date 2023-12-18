@@ -9,23 +9,42 @@ document.addEventListener('DOMContentLoaded', function() {
         fetchAndDisplayDriverData(driverId);
     } else {
         console.error('No driver ID provided in the URL');
+        openModal('No driver ID provided in the URL!');
     }
 });
 
 async function fetchAndDisplayDriverData(driverId) {
-    const { data, error } = await _supabase.from('drivers').select('*').eq('id', driverId);
+    const { data: driverData, error: driverError } = await _supabase
+        .from('drivers')
+        .select(`
+            id,
+            uid,
+            car,
+            points,
+            profiles (
+                fullname,
+                nationality,
+                description
+            )
+        `)
+        .eq('id', driverId)
+        .single();
 
-    if (error) {
+    console.log(driverData);
+    if (driverError) {
         console.error('Error fetching drivers data:', error.message);
+        openModal('Erro fetching drivers data!');
         return;
     }
 
-    const driver = data[0];
-    if (driver) {
-        document.title = driver.fullname + " | Championship Manager";
-        document.getElementById('driver-fullname').textContent = driver.fullname;
-        document.getElementById('nationality').textContent = driver.nationality;
-        document.getElementById('car').textContent = driver.car;
-        document.getElementById('description').textContent = driver.description;
+    if (driverData && driverData.profiles) {
+        const profileData = driverData.profiles;
+        document.title = profileData.fullname + " | Championship Manager";
+        document.getElementById('driver-fullname').textContent = profileData.fullname;
+        document.getElementById('nationality').textContent = profileData.nationality;
+        document.getElementById('date_of_birth').textContent = profileData.date_of_birth;
+        document.getElementById('car').textContent = driverData.car;
+        document.getElementById('points').textContent = driverData.points;
+        document.getElementById('description').textContent = profileData.description;
     }
 }
