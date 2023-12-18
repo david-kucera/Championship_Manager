@@ -11,7 +11,7 @@ async function populateNameNationality() {
             // Fetch user data from Supabase
             const { data, error } = await _supabase
                 .from('profiles')
-                .select('fullname, nationality')
+                .select('fullname, nationality, date_of_birth, description')
                 .eq('uid', uid)
                 .single();
 
@@ -21,11 +21,12 @@ async function populateNameNationality() {
                 return;
             }
 
-            // Check if data exists before populating fields
             if (data) {
                 // Populate input fields with user data
                 document.getElementById('fullname').value = data.fullname || '';
                 document.getElementById('nationality').value = data.nationality || '';
+                document.getElementById('date_of_birth').value = data.date_of_birth || '';
+                document.getElementById('description').value = data.description || '';
             } else {
                 openModal('User data not found in the profiles table!');
             }
@@ -106,9 +107,6 @@ async function changeValue(updatedValue, fieldName) {
         }
     }
 }
-
-const driverButton = document.querySelector('.driver-btn');
-driverButton.addEventListener('click', becomeADriver);
 
 async function becomeADriver() {
     const { data, error } = await _supabase

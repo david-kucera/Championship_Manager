@@ -24,6 +24,7 @@ async function fetchAndDisplayDriverData(driverId) {
             profiles (
                 fullname,
                 nationality,
+                date_of_birth,
                 description
             )
         `)
