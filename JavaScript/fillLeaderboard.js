@@ -14,9 +14,7 @@ document.addEventListener('DOMContentLoaded', async function () {
             )
           `);
     const editButton = document.getElementById('editLeaderboardButton');
-    const addButton = document.getElementById('addLeaderboardButton');
     editButton.style.display = 'none';
-    addButton.style.display = 'none';
     let isEditing = false;
 
     if (error) {
@@ -60,19 +58,6 @@ document.addEventListener('DOMContentLoaded', async function () {
             if (index === 2) { row.classList.add('bronze_leaderboard') }
 
             if (isAuthenticated && isAdmin) {
-                // Remove buttons
-                const removeButtonCell = document.createElement('td');
-                const removeButton = document.createElement('button');
-                removeButton.textContent = 'Remove';
-                removeButton.className = 'btn btn-danger';
-                removeButton.style.padding = '0.375rem 0.75rem';
-                removeButton.style.fontSize = '1rem';
-                removeButton.onclick = function () {
-                    removeRow(row.rowIndex - 1);
-                };
-                removeButtonCell.appendChild(removeButton);
-                row.appendChild(removeButtonCell);
-
                 // Edit row buttons
                 const editRowButtonCell = document.createElement('td');
                 const editRowButton = document.createElement('button');
@@ -93,124 +78,14 @@ document.addEventListener('DOMContentLoaded', async function () {
 
     if (isAuthenticated && isAdmin) {
         editButton.style.display = 'block';
-        addButton.style.display = 'block';
     }
-
     editButton.addEventListener('click', function () {
         isEditing = !isEditing;
         const isVisible = isEditing; // Change this based on your logic
         toggleEditButtons(isAuthenticated, isEditing, isVisible);
-        toggleRemoveButtons(isAuthenticated, isEditing);
     });
-
-    addButton.addEventListener('click', function () {
-        addButton.disabled = true;
-        setTimeout(async function() {
-            await addNewRow();
-            addButton.disabled = false;
-        }, 0);
-    });
-
-    toggleRemoveButtons(isAuthenticated, isEditing);
     toggleEditButtons(isAuthenticated, isEditing, false);
 });
-
-// Function to add a new row to the table
-function addNewRow() {
-    const tableBody = document.getElementById('tbody-leaderboard');
-    const newRow = document.createElement('tr');
-
-    for (let i = 0; i < 5; i++) {
-        const cell = document.createElement('td');
-        const input = document.createElement('input');
-        input.type = 'text';
-        input.className = 'form-control';
-
-        if (i === 0) {
-            input.disabled = true;
-        }
-
-        cell.appendChild(input);
-        newRow.appendChild(cell);
-    }
-
-    const acceptButtonCell = document.createElement('td');
-    const acceptButton = document.createElement('button');
-    acceptButton.textContent = 'Accept';
-    acceptButton.className = 'btn btn-primary btn-sm';
-    acceptButton.onclick = function () {
-        handleAcceptedValues(newRow);
-    };
-    acceptButtonCell.appendChild(acceptButton);
-    newRow.appendChild(acceptButtonCell);
-    tableBody.appendChild(newRow);
-}
-
-// Function to handle the accepted values and insert into the database
-function handleAcceptedValues(newRow) {
-    const values = Array.from(newRow.getElementsByTagName('input')).map(input => input.value);
-    insertData(values);
-}
-
-// Function to insert data into database
-async function insertData(data) {
-    try {
-        const { error } = await _supabase
-            .from('drivers')
-            .insert({ fullname: data[1], nationality: data[2], car: data[3], points: data[4]});
-
-    } catch (error) {
-        console.error('Error during inserting data:', error.message);
-        openModal('Error during inserting data. Please try again.');
-    }
-    openModal("Sucessfully added!");
-    setTimeout(function() {
-        window.location.reload();
-    }, 1000);
-}
-
-// Function to show remove buttons when user is editing
-function toggleRemoveButtons(isAuthenticated, isEditing) {
-    const removeButtons = document.querySelectorAll('.btn-danger');
-    removeButtons.forEach(function (button) {
-        button.style.display = isAuthenticated && isEditing ? 'block' : 'none';
-    });
-}
-
-// Function to remove a row from the table
-function removeRow(rowIndex) {
-    const tableBody = document.getElementById('tbody-leaderboard');
-    const removedRow = tableBody.rows[rowIndex];
-
-    const fullname = removedRow.cells[1].textContent;
-    const nationality = removedRow.cells[2].textContent;
-    const car = removedRow.cells[3].textContent;
-    const points = removedRow.cells[4].textContent;
-
-    removeDriver(fullname, nationality, car, points);
-    tableBody.deleteRow(rowIndex);
-
-    setTimeout(() => {
-        window.location.reload();
-    }, 100);
-}
-
-// Function that removes driver from database.
-async function removeDriver(fullname, nationality, car, points) {
-    try {
-        const { data, error } = await _supabase
-            .from('drivers')
-            .delete()
-            .eq('fullname', fullname)
-            .eq('nationality', nationality)
-            .eq('car', car)
-            .eq('points', points);
-
-    } catch (error) {
-        console.error('Error during deleting data:', error.message);
-        openModal('Error during deleting data. Please try again.');
-    }
-}
 
 // Modify the toggleEditButtons function
 function toggleEditButtons(isAuthenticated, isEditing, isVisible) {
@@ -233,8 +108,8 @@ function editRow(rowIndex) {
         const inputs = editedRow.querySelectorAll('input');
         const originalValues = Array.from(inputs).map(input => input.value);
 
-        // Skip the first and last cells which should not be editable (buttons)
-        for (let i = 1; i < inputs.length - 2; i++) {
+        // Skip the first and last cells which should not be editable (button)
+        for (let i = 1; i < inputs.length - 1; i++) {
             const cell = editedRow.cells[i];
             cell.textContent = inputs[i].value;
         }
@@ -275,7 +150,7 @@ function editRow(rowIndex) {
 
 // Function to check if a cell should be editable
 function isCellEditable(cells, index) {
-    const editRowButtonCellIndex = cells.length - 2;
+    const editRowButtonCellIndex = cells.length - 1;
     return index !== 0 && index !== editRowButtonCellIndex;
 }
 
@@ -354,6 +229,5 @@ function disableRowEditing() {
         cell.textContent = input.value;
     });
     isEditing = false;
-    toggleRemoveButtons(isAuthenticated, isEditing);
     toggleEditButtons(isAuthenticated, isEditing);
 }
