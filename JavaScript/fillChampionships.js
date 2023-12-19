@@ -88,52 +88,68 @@ function toggleEditButtons(isAuthenticated, isEditing) {
     });
 }
 
-// New name of championship
-let newName;
+// Old name of championship
+let oldName;
 
 // Function to edit a row from the table
 function editRow(rowIndex) {
     const tableBody = document.getElementById('tbody_championships');
     const editedRow = tableBody.rows[rowIndex];
+    const cells = editedRow.cells;
+    oldName = cells[0].textContent;
+    console.log(oldName);
 
-    const firstCell = editedRow.cells[0];
-    const originalName = firstCell.textContent;
+    for (let i = 0; i < cells.length - 2; i++) {
+        const originalText = cells[i].textContent;
+        const input = document.createElement('input');
+        input.type = 'text';
+        input.className = 'form-control';
+        input.value = originalText;
+        cells[i].textContent = '';
+        cells[i].appendChild(input);
+    }
 
-    const input = document.createElement('input');
-    input.type = 'text';
-    input.className = 'form-control';
-    input.value = originalName;
-    firstCell.textContent = '';
-    firstCell.appendChild(input);
-
-    // Change the "Edit row" button to "Save Changes" for the specific row
+    // Change the "Edit row" button to "Save Changes"
     const editButton = editedRow.querySelector('.btn-warning');
     editButton.textContent = 'Save Changes';
     editButton.onclick = function () {
-        newName = input.value;
-        saveChanges(rowIndex, originalName);
+        saveChanges(rowIndex);
     };
 }
 
 // Function to save changes made during row editing
-function saveChanges(rowIndex, originalName) {
+function saveChanges(rowIndex) {
     const tableBody = document.getElementById('tbody_championships');
     const editedRow = tableBody.rows[rowIndex];
-    const firstCell = editedRow.cells[0];
-    updateValue(newName, originalName);
+    const cells = editedRow.cells;
+
+    const updatedValues = [];
+    for (let i = 0; i < cells.length - 2; i++) { // -2 to skip the last two cells (buttons)
+        const inputField = cells[i].querySelector('input');
+        if (inputField) {
+            updatedValues.push(inputField.value);
+        } else {
+            updatedValues.push(cells[i].textContent);
+        }
+    }
+
+    updateValues(rowIndex, updatedValues);
 }
 
 // Function to update row value
-async function updateValue(newName, originalName) {
-    if (newName === originalName) {
+async function updateValues(rowIndex, updatedValues) {
+    console.log(updatedValues);
+    const newName = updatedValues[0];
+
+    if (newName === oldName) {
         openModal('Name of championship must be different!');
         return;
     }
     try {
         const { data, error } = await _supabase
             .from('championships')
-            .update({ name: newName })
-            .eq('name', originalName);
+            .update({ name: newName, startDate: updatedValues[1], endDate: updatedValues[2], description: updatedValues[3] })
+            .eq('name', oldName);
 
         if (error) {
             console.error('Error during updating data:', error.message);
