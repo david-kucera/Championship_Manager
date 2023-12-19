@@ -55,6 +55,7 @@ async function populateFields() {
                 }
             } else {
                 document.getElementById('car').parentNode.style.display = 'none'; // Hide car field
+                document.getElementById('btn_car').parentNode.style.display = 'none';
             }
 
         } catch (error) {
