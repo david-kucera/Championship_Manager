@@ -206,10 +206,6 @@ function addNewRow() {
         input.type = 'text';
         input.className = 'form-control';
 
-        if (i === 1 || i === 2 || i === 3 ) {
-            input.disabled = true;
-        }
-
         cell.appendChild(input);
         newRow.appendChild(cell);
     }
@@ -236,7 +232,7 @@ async function insertData(insertData) {
     try {
         const { error } = await _supabase
             .from('championships')
-            .insert({ name: insertData[0] });
+            .insert({ name: insertData[0], startDate: insertData[1], endDate: insertData[2], description: insertData[3] });
 
         if (error) {
             console.error('Error during inserting data:', error.message);
