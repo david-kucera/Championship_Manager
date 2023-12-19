@@ -13,7 +13,6 @@ document.addEventListener('DOMContentLoaded', async function () {
               points
             )
           `);
-    console.log(data);
     const editButton = document.getElementById('editLeaderboardButton');
     const addButton = document.getElementById('addLeaderboardButton');
     editButton.style.display = 'none';
@@ -234,7 +233,7 @@ function editRow(rowIndex) {
         const inputs = editedRow.querySelectorAll('input');
         const originalValues = Array.from(inputs).map(input => input.value);
 
-        // Skip the first and last cells which should not be editable
+        // Skip the first and last cells which should not be editable (buttons)
         for (let i = 1; i < inputs.length - 2; i++) {
             const cell = editedRow.cells[i];
             cell.textContent = inputs[i].value;
@@ -304,33 +303,45 @@ function areAllInputsValid(inputFields) {
 // Function to save changes into supabase
 async function updateValues(newValues, originalValues) {
     try {
-        const { data, error } = await _supabase
-            .from('drivers')
+        // Begin a transaction
+        const { data: uidData, error: uidError } = await _supabase
+            .from('profiles')
+            .select('uid')
+            .eq('fullname', originalValues[1])
+            .single();
+
+        if (uidError) throw uidError;
+
+        // Use a transaction to perform both updates
+        const { data: profileData, error: profileError } = await _supabase
+            .from('profiles')
             .update({
                 fullname: newValues[0],
-                nationality: newValues[1],
+                nationality: newValues[1]
+            })
+            .eq('uid', uidData.uid);
+
+        if (profileError) throw profileError;
+
+        const { data: driversData, error: driversError } = await _supabase
+            .from('drivers')
+            .update({
                 car: newValues[2],
                 points: newValues[3]
             })
-            .eq('fullname', originalValues[1])
-            .eq('nationality', originalValues[2])
-            .eq('car', originalValues[3])
-            .eq('points', originalValues[4]);
+            .eq('uid', uidData.uid);
 
-        if (error) {
-            console.error('Error during updating data:', error.message);
-            openModal('Error during updating data. Please try again.');
-        } else {
-            openModal('Data updated sucessfully!');
-            disableRowEditing();
+        if (driversError) throw driversError;
 
-            setTimeout(() => {
-                window.location.reload();
-            }, 100);
-        }
+        openModal('Data updated successfully!');
+        disableRowEditing();
     } catch (error) {
         console.error('Error during updating data:', error.message);
         openModal('Error during updating data. Please try again.');
+    } finally {
+        setTimeout(() => {
+            window.location.reload();
+        }, 100);
     }
 }
 
@@ -346,4 +357,3 @@ function disableRowEditing() {
     toggleRemoveButtons(isAuthenticated, isEditing);
     toggleEditButtons(isAuthenticated, isEditing);
 }
-
