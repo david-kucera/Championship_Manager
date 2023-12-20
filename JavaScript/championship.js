@@ -12,7 +12,7 @@ document.addEventListener('DOMContentLoaded', function() {
     if (isDriver) {
         document.getElementById('add-to-championship-button').style.display = 'block';
         document.getElementById('add-to-championship-button').onclick = function() {
-            // TODO add to a championship
+            addDriverToChampionship(championshipId);
         };
     }
 });
@@ -32,5 +32,27 @@ async function fetchAndDisplayChampionshipData(championshipId) {
         document.getElementById('start-date').textContent = championship.startDate;
         document.getElementById('end-date').textContent = championship.endDate;
         document.getElementById('description').textContent = championship.description;
+    }
+}
+
+async function addDriverToChampionship(championshipId) {
+    let driverUid = getCookie('uid');
+    if (!driverUid) {
+        console.error("No driver UID found in cookies");
+        return;
+    }
+
+    try {
+        const { data, error } = await _supabase.from('driversInChampionship').insert([
+            { championshipId: championshipId, driverUid: driverUid }
+        ]);
+
+        if (error) throw error;
+
+        console.log("Driver added to championship successfully:", data);
+        openModal("You were successfully added to the championship!");
+    } catch (err) {
+        console.error("Error adding driver to championship:", err.message);
+        openModal("Error when adding to the championship.");
     }
 }
