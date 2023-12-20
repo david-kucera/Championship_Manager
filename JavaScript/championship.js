@@ -33,6 +33,41 @@ async function fetchAndDisplayChampionshipData(championshipId) {
         document.getElementById('end-date').textContent = championship.endDate;
         document.getElementById('description').textContent = championship.description;
     }
+
+    const { data: driversData, error: driversError } = await _supabase
+        .from('driversInChampionship')
+        .select('driverUid')
+        .eq('championshipId', championshipId);
+
+    if (driversError) {
+        console.error('Error fetching drivers data:', driversError.message);
+        openModal("Errpr fetching drivers data!");
+        return;
+    }
+
+    for (const driver of driversData) {
+        const uid = driver.driverUid;
+        const { data: profileData, error: profileError } = await _supabase
+            .from('profiles')
+            .select('fullname')
+            .eq('uid', uid);
+
+        if (profileError) {
+            console.error('Error fetching driver details:', profileError.message);
+            continue; // Skip this driver and continue with the next
+        }
+
+        addDriverToTable(profileData[0].fullname);
+    }
+}
+
+function addDriverToTable(driverName) {
+    const tbody = document.getElementById('tbody_championship_drivers');
+    const row = document.createElement('tr');
+    const nameCell = document.createElement('td');
+    nameCell.textContent = driverName;
+    row.appendChild(nameCell);
+    tbody.appendChild(row);
 }
 
 async function addDriverToChampionship(championshipId) {
