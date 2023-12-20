@@ -8,13 +8,6 @@ document.addEventListener('DOMContentLoaded', function() {
     } else {
         console.error('No championship ID provided in the URL');
     }
-
-    if (isDriver) {
-        document.getElementById('add-to-championship-button').style.display = 'block';
-        document.getElementById('add-to-championship-button').onclick = function() {
-            addDriverToChampionship(championshipId);
-        };
-    }
 });
 
 async function fetchAndDisplayChampionshipData(championshipId) {
@@ -45,8 +38,15 @@ async function fetchAndDisplayChampionshipData(championshipId) {
         return;
     }
 
+    let currentUserIsRegistered = false;
+    const currentUserUid = getCookie('uid');
+
     for (const driver of driversData) {
         const uid = driver.driverUid;
+        // Check if user is already in this championship
+        if (uid === currentUserUid) {
+            currentUserIsRegistered = true;
+        }
         const { data: profileData, error: profileError } = await _supabase
             .from('profiles')
             .select('fullname')
@@ -58,6 +58,16 @@ async function fetchAndDisplayChampionshipData(championshipId) {
         }
 
         addDriverToTable(profileData[0].fullname);
+    }
+
+    // Hide the button if he is in the championship
+    if (isDriver && !currentUserIsRegistered) {
+        document.getElementById('add-to-championship-button').style.display = 'block';
+        document.getElementById('add-to-championship-button').onclick = function() {
+            addDriverToChampionship(championshipId);
+        };
+    } else {
+        document.getElementById('add-to-championship-button').style.display = 'none';
     }
 }
 
