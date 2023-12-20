@@ -141,10 +141,6 @@ async function updateValues(rowIndex, updatedValues) {
     console.log(updatedValues);
     const newName = updatedValues[0];
 
-    if (newName === oldName) {
-        openModal('Name of championship must be different!');
-        return;
-    }
     try {
         const { data, error } = await _supabase
             .from('championships')

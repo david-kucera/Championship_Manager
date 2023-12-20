@@ -8,7 +8,6 @@ document.addEventListener('DOMContentLoaded', async function () {
             fullname,
             nationality,
             drivers!inner (
-              uid,
               car,
               points
             )
@@ -30,22 +29,21 @@ document.addEventListener('DOMContentLoaded', async function () {
         });
 
         data.forEach((profile, index) => {
-            const driver = profile.drivers[0];
             const row = document.createElement('tr');
 
             const cell1 = document.createElement('td');
             cell1.textContent = index + 1;  // Position
             const cell2 = document.createElement('td');
             const link = document.createElement('a');
-            link.href = `driver_profile.html?driverUid=${driver.uid}`;
+            link.href = `driver_profile.html?driverUid=${profile.uid}`;
             link.textContent = profile.fullname;
             cell2.appendChild(link);
             const cell3 = document.createElement('td');
             cell3.textContent = profile.nationality;
             const cell4 = document.createElement('td');
-            cell4.textContent = driver.car;
+            cell4.textContent = profile.drivers.car;
             const cell5 = document.createElement('td');
-            cell5.textContent = driver.points;
+            cell5.textContent = profile.drivers.points;
 
             row.appendChild(cell1);
             row.appendChild(cell2);
