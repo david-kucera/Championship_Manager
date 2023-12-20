@@ -1,5 +1,6 @@
 let isAuthenticated = document.cookie.includes("isAuthenticated=true");
 let isAdmin = document.cookie.includes("role=admin");
+let isDriver = document.cookie.includes("role=driver");
 const loginLogoutFooter = document.getElementById('login-logout-footer');
 
 function setLoginLogoutLink() {

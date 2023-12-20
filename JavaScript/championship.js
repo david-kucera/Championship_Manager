@@ -3,12 +3,17 @@ document.addEventListener('DOMContentLoaded', function() {
     const urlParams = new URLSearchParams(window.location.search);
     const championshipId = urlParams.get('championshipId');
 
-    console.log("ID: " , championshipId);
-
     if (championshipId) {
         fetchAndDisplayChampionshipData(championshipId);
     } else {
         console.error('No championship ID provided in the URL');
+    }
+
+    if (isDriver) {
+        document.getElementById('add-to-championship-button').style.display = 'block';
+        document.getElementById('add-to-championship-button').onclick = function() {
+            // TODO add to a championship
+        };
     }
 });
 

@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Championships | Championship Manager</title>
+    <title>Race | Championship Manager</title>
     <link rel="icon" type="image/x-icon" href="pics/favicon.ico">
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
     <link rel="stylesheet" href="style.css">
@@ -19,7 +19,7 @@
     <div class="modal-dialog" role="document">
         <div class="modal-content">
             <div class="modal-header">
-                <h5 class="modal-title" id="errorModalLabel">Info</h5>
+                <h5 class="modal-title" id="errorModalLabel">Error</h5>
                 <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                     <span aria-hidden="true">&times;</span>
                 </button>
@@ -72,25 +72,29 @@
 </nav>
 
 <div class="container mt-4">
-    <h1 class="title_header_pages01">Championships</h1>
+    <h1 class="title_header_pages01" id="race-name"></h1>
+    <div>
+        <p><strong>Date</strong></p>
+        <p id="date"></p>
+        <p><strong>Location</strong></p>
+        <p id="location"></p>
+        <button id="add-to-race-button" style="display: none;" class="btn btn-primary mt-3">Register in Race</button>
+    </div>
+
+    <h2 class="mt-5">Race results</h2>
     <div class="table-responsive">
         <table class="table table-sm">
             <thead>
             <tr>
-                <th>Championship Name</th>
-                <th>Start date</th>
-                <th>End date</th>
-                <th>Description</th>
+                <th>Name</th>
+                <th>Car</th>
+                <th>Position</th>
+                <th>Points</th>
             </tr>
             </thead>
-            <tbody id="tbody_championships">
-
+            <tbody id="tbody_race_results">
             </tbody>
         </table>
-    </div>
-    <div class="button-container mt-3">
-        <button id="editButton" class="btn btn-primary" onclick="toggleRemoveButtons()" style="display: none;">Edit Table</button>
-        <button id="addButton" class="btn btn-success" onclick="addNewRow()" style="display: none;">Add Row</button>
     </div>
 </div>
 
@@ -107,6 +111,7 @@
 
 <script src="JavaScript/authentication.js"></script>
 <script src="JavaScript/logout.js"></script>
-<script src="JavaScript/championships.js"></script>
+<script src="JavaScript/championship.js"></script>
+
 </body>
 </html>
