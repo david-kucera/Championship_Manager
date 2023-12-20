@@ -1,23 +1,21 @@
 // Function to parse the URL and load the data about a driver
 document.addEventListener('DOMContentLoaded', function() {
     const urlParams = new URLSearchParams(window.location.search);
-    const driverId = urlParams.get('driverId');
+    const driverUid = urlParams.get('driverUid');
 
-    console.log("ID: " , driverId);
 
-    if (driverId) {
-        fetchAndDisplayDriverData(driverId);
+    if (driverUid) {
+        fetchAndDisplayDriverData(driverUid);
     } else {
         console.error('No driver ID provided in the URL');
         openModal('No driver ID provided in the URL!');
     }
 });
 
-async function fetchAndDisplayDriverData(driverId) {
+async function fetchAndDisplayDriverData(driverUid) {
     const { data: driverData, error: driverError } = await _supabase
         .from('drivers')
         .select(`
-            id,
             uid,
             car,
             points,
@@ -28,10 +26,9 @@ async function fetchAndDisplayDriverData(driverId) {
                 description
             )
         `)
-        .eq('id', driverId)
+        .eq('uid', driverUid)
         .single();
 
-    console.log(driverData);
     if (driverError) {
         console.error('Error fetching drivers data:', error.message);
         openModal('Erro fetching drivers data!');

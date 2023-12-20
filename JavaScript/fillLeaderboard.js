@@ -8,7 +8,7 @@ document.addEventListener('DOMContentLoaded', async function () {
             fullname,
             nationality,
             drivers!inner (
-              id,
+              uid,
               car,
               points
             )
@@ -37,7 +37,7 @@ document.addEventListener('DOMContentLoaded', async function () {
             cell1.textContent = index + 1;  // Position
             const cell2 = document.createElement('td');
             const link = document.createElement('a');
-            link.href = `driver_profile.html?driverId=${driver.id}`;
+            link.href = `driver_profile.html?driverUid=${driver.uid}`;
             link.textContent = profile.fullname;
             cell2.appendChild(link);
             const cell3 = document.createElement('td');
