@@ -27,6 +27,20 @@ async function fetchAndDisplayChampionshipData(championshipId) {
         document.getElementById('description').textContent = championship.description;
     }
 
+    const { data: raceData, error: raceError } = await _supabase
+        .from('races')
+        .select('name, date, location')
+        .eq('championshipId', championshipId);
+
+    if (raceError) {
+        console.error('Error fetching race data:', raceError.message);
+        openModal('Error fetching race data!');
+    }
+
+    for (const race of raceData) {
+        addRaceToTable(race);
+    }
+
     const { data: driversData, error: driversError } = await _supabase
         .from('driversInChampionship')
         .select('driverUid')
@@ -34,8 +48,7 @@ async function fetchAndDisplayChampionshipData(championshipId) {
 
     if (driversError) {
         console.error('Error fetching drivers data:', driversError.message);
-        openModal("Errpr fetching drivers data!");
-        return;
+        openModal("Error fetching drivers data!");
     }
 
     let currentUserIsRegistered = false;
@@ -69,6 +82,21 @@ async function fetchAndDisplayChampionshipData(championshipId) {
     } else {
         document.getElementById('add-to-championship-button').style.display = 'none';
     }
+}
+
+function addRaceToTable(race) {
+    const tbody = document.getElementById('tbody_championship_races');
+    const row = document.createElement('tr');
+    const nameCell = document.createElement('td');
+    nameCell.textContent = race.name;
+    const dateCell = document.createElement('td');
+    dateCell.textContent = race.date;
+    const locationCell = document.createElement('td');
+    locationCell.textContent = race.location;
+    row.appendChild(nameCell);
+    row.appendChild(dateCell);
+    row.appendChild(locationCell);
+    tbody.appendChild(row);
 }
 
 function addDriverToTable(driverName) {
