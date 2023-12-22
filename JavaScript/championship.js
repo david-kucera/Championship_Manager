@@ -29,7 +29,7 @@ async function fetchAndDisplayChampionshipData(championshipId) {
 
     const { data: raceData, error: raceError } = await _supabase
         .from('races')
-        .select('name, date, location')
+        .select('*')
         .eq('championshipId', championshipId);
 
     if (raceError) {
@@ -70,7 +70,7 @@ async function fetchAndDisplayChampionshipData(championshipId) {
             continue; // Skip this driver and continue with the next
         }
 
-        addDriverToTable(profileData[0].fullname);
+        addDriverToTable(profileData[0].fullname, uid);
     }
 
     // Hide the button if he is in the championship
@@ -87,23 +87,31 @@ async function fetchAndDisplayChampionshipData(championshipId) {
 function addRaceToTable(race) {
     const tbody = document.getElementById('tbody_championship_races');
     const row = document.createElement('tr');
+
     const nameCell = document.createElement('td');
-    nameCell.textContent = race.name;
+    const link = document.createElement('a');
+    link.href = `race.html?raceId=${race.id}`;
+    link.textContent = race.name;
+    nameCell.appendChild(link);
     const dateCell = document.createElement('td');
     dateCell.textContent = race.date;
     const locationCell = document.createElement('td');
     locationCell.textContent = race.location;
+
     row.appendChild(nameCell);
     row.appendChild(dateCell);
     row.appendChild(locationCell);
     tbody.appendChild(row);
 }
 
-function addDriverToTable(driverName) {
+function addDriverToTable(driverName, uid) {
     const tbody = document.getElementById('tbody_championship_drivers');
     const row = document.createElement('tr');
     const nameCell = document.createElement('td');
-    nameCell.textContent = driverName;
+    const link = document.createElement('a');
+    link.href = `driver_profile.html?driverUid=${uid}`;
+    link.textContent = driverName;
+    nameCell.appendChild(link);
     row.appendChild(nameCell);
     tbody.appendChild(row);
 }
