@@ -11,8 +11,10 @@ document.addEventListener('DOMContentLoaded', function() {
 });
 
 async function fetchAndDisplayRaceData(raceId) {
-    const { data, error } = await _supabase.from('races').select('*').eq('id', raceId);
-
+    const { data, error } = await _supabase
+        .from('races')
+        .select('*')
+        .eq('id', raceId);
     if (error) {
         console.error('Error fetching race data:', error.message);
         return;
@@ -27,94 +29,61 @@ async function fetchAndDisplayRaceData(raceId) {
         document.getElementById('description').textContent = race.description;
     }
 
-    return;
-
-
-    const { data: driversData, error: driversError } = await _supabase
-        .from('driversInRace')
-        .select('driverUid')
+    const { data: resultData, error: resultError } = await _supabase
+        .from('raceResults')
+        .select('*')
         .eq('raceId', raceId);
-
-    if (driversError) {
-        console.error('Error fetching drivers data:', driversError.message);
-        openModal("Error fetching drivers data!");
+    if (resultError) {
+        console.log('Error fetching race results: ', resultError.message);
+        openModal('Error fetching race results!');
     }
 
-    let currentUserIsRegistered = false;
-    const currentUserUid = getCookie('uid');
+    for (const result of resultData) {
+        const uid = result.driverUid;
+        const points = result.points;
+        const position = result.position;
+        const time = result.time;
 
-    for (const driver of driversData) {
-        const uid = driver.driverUid;
-        // Check if user is already in this championship
-        if (uid === currentUserUid) {
-            currentUserIsRegistered = true;
-        }
         const { data: profileData, error: profileError } = await _supabase
             .from('profiles')
             .select('fullname')
             .eq('uid', uid);
-
         if (profileError) {
-            console.error('Error fetching driver details:', profileError.message);
+            console.error('Error fetching profile details:', profileError.message);
             continue; // Skip this driver and continue with the next
         }
+        const name = profileData[0].fullname;
 
-        addDriverToTable(profileData[0].fullname);
-    }
-
-    // Hide the button if he is in the championship
-    if (isDriver && !currentUserIsRegistered) {
-        document.getElementById('add-to-championship-button').style.display = 'block';
-        document.getElementById('add-to-championship-button').onclick = function() {
-            addDriverToChampionship(championshipId);
-        };
-    } else {
-        document.getElementById('add-to-championship-button').style.display = 'none';
+        const { data: driverData, error: driverError } = await _supabase
+            .from('drivers')
+            .select('car')
+            .eq('uid', uid);
+        if (driverError) {
+            console.error("Error fetching driver details: ", driverError.message);
+            openModal('Error fetching driver details!');
+        }
+        const car = driverData[0].car;
+        addResult(name, car, position, time, points);
     }
 }
 
-function addRaceToTable(race) {
-    const tbody = document.getElementById('tbody_championship_races');
+function addResult(name, car, position, time, points) {
+    const tbody = document.getElementById('tbody_race_results');
     const row = document.createElement('tr');
     const nameCell = document.createElement('td');
-    nameCell.textContent = race.name;
-    const dateCell = document.createElement('td');
-    dateCell.textContent = race.date;
-    const locationCell = document.createElement('td');
-    locationCell.textContent = race.location;
+    nameCell.textContent = name;
+    const carCell = document.createElement('td');
+    carCell.textContent = car;
+    const positionCell = document.createElement('td');
+    positionCell.textContent = position;
+    const timeCell = document.createElement('td');
+    timeCell.textContent = time;
+    const pointsCell = document.createElement('td');
+    pointsCell.textContent = points;
     row.appendChild(nameCell);
-    row.appendChild(dateCell);
-    row.appendChild(locationCell);
+    row.appendChild(carCell);
+    row.appendChild(positionCell);
+    row.appendChild(timeCell);
+    row.appendChild(pointsCell);
     tbody.appendChild(row);
-}
-
-function addDriverToTable(driverName) {
-    const tbody = document.getElementById('tbody_championship_drivers');
-    const row = document.createElement('tr');
-    const nameCell = document.createElement('td');
-    nameCell.textContent = driverName;
-    row.appendChild(nameCell);
-    tbody.appendChild(row);
-}
-
-async function addDriverToChampionship(championshipId) {
-    let driverUid = getCookie('uid');
-    if (!driverUid) {
-        console.error("No driver UID found in cookies");
-        return;
-    }
-
-    try {
-        const { data, error } = await _supabase.from('driversInChampionship').insert([
-            { championshipId: championshipId, driverUid: driverUid }
-        ]);
-
-        if (error) throw error;
-
-        console.log("Driver added to championship successfully:", data);
-        openModal("You were successfully added to the championship!");
-    } catch (err) {
-        console.error("Error adding driver to championship:", err.message);
-        openModal("Error when adding to the championship.");
-    }
 }
