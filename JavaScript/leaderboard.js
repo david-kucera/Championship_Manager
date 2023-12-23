@@ -21,8 +21,8 @@ document.addEventListener('DOMContentLoaded', async function () {
         openModal('Error fetching data!');
     } else {
         data.sort((a, b) => {
-            if (b.points !== a.points) {
-                return b.points - a.points;
+            if (b.drivers.points !== a.drivers.points) {
+                return b.drivers.points - a.drivers.points;
             } else {
                 return a.fullname.localeCompare(b.fullname);
             }
