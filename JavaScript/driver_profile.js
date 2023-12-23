@@ -3,9 +3,9 @@ document.addEventListener('DOMContentLoaded', function() {
     const urlParams = new URLSearchParams(window.location.search);
     const driverUid = urlParams.get('driverUid');
 
-
     if (driverUid) {
         fetchAndDisplayDriverData(driverUid);
+        fetchAndDisplayRaceResults(driverUid);
     } else {
         console.error('No driver ID provided in the URL');
         openModal('No driver ID provided in the URL!');
@@ -28,10 +28,9 @@ async function fetchAndDisplayDriverData(driverUid) {
         `)
         .eq('uid', driverUid)
         .single();
-
     if (driverError) {
         console.error('Error fetching drivers data:', error.message);
-        openModal('Erro fetching drivers data!');
+        openModal('Error fetching drivers data!');
         return;
     }
 
@@ -45,4 +44,60 @@ async function fetchAndDisplayDriverData(driverUid) {
         document.getElementById('points').textContent = driverData.points;
         document.getElementById('description').textContent = profileData.description;
     }
+}
+
+async function fetchAndDisplayRaceResults(driverUid) {
+    const { data: resultData, error: resultError } = await _supabase
+        .from('raceResults')
+        .select('*')
+        .eq('driverUid', driverUid);
+    if (resultError) {
+        console.log('Error fetching race result data: ', resultError.message);
+        openModal('Error fetching race result data!');
+    }
+    for (const race of resultData) {
+        const raceId = race.raceId;
+        const position = race.position;
+        const points = race.points;
+
+        const { data: raceData, error: raceError } = await _supabase
+            .from('races')
+            .select('name, date, location')
+            .eq('id', raceId);
+        if (raceError) {
+            console.log('Error fetching race details: ', raceError.message);
+            openModal('Error fetching race details!');
+        }
+        const raceName = raceData[0].name;
+        const raceDate = raceData[0].date;
+        const raceLocation = raceData[0].location;
+        addResult(raceId, raceName, raceLocation, raceDate, position, points);
+    }
+    return;
+}
+
+function addResult(raceId, raceName, raceLocation, raceDate, position, points) {
+    const tbody = document.getElementById('tbody_driver_races');
+    const row = document.createElement('tr');
+
+    const nameCell = document.createElement('td');
+    const link = document.createElement('a');
+    link.href = `race.html?raceId=${raceId}`;
+    link.textContent = raceName;
+    nameCell.appendChild(link);
+    const locationCell = document.createElement('td');
+    locationCell.textContent = raceLocation;
+    const dateCell = document.createElement('td');
+    dateCell.textContent = raceDate;
+    const positionCell = document.createElement('td');
+    positionCell.textContent = position;
+    const pointsCell = document.createElement('td');
+    pointsCell.textContent = points;
+
+    row.appendChild(nameCell);
+    row.appendChild(locationCell);
+    row.appendChild(dateCell);
+    row.appendChild(positionCell);
+    row.appendChild(pointsCell);
+    tbody.appendChild(row);
 }
