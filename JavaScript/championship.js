@@ -43,38 +43,28 @@ async function fetchAndDisplayChampionshipData(championshipId) {
 
     const { data: driversData, error: driversError } = await _supabase
         .from('driversInChampionship')
-        .select('driverUid')
-        .eq('championshipId', championshipId);
-
+        .select(`
+            driverUid,
+            drivers(points)
+            profiles(fullname)
+        `)
+        .eq('championshipId', championshipId)
+        .order('points', { foreignTable: 'drivers', ascending: false });
     if (driversError) {
         console.error('Error fetching drivers data:', driversError.message);
         openModal("Error fetching drivers data!");
     }
 
-
+    // Sort by points
+    driversData.sort((a, b) => b.drivers.points - a.drivers.points);
+    driversData.forEach(entry => {
+        addDriverToTable(entry.driverUid);
+    });
 
     let currentUserIsRegistered = false;
     const currentUserUid = getCookie('uid');
-
-    for (const driver of driversData) {
-        const uid = driver.driverUid;
-        // Check if user is already in this championship
-        if (uid === currentUserUid) {
-            currentUserIsRegistered = true;
-        }
-        const { data: profileData, error: profileError } = await _supabase
-            .from('profiles')
-            .select('fullname')
-            .eq('uid', uid);
-
-        if (profileError) {
-            console.error('Error fetching driver details:', profileError.message);
-            continue; // Skip this driver and continue with the next
-        }
-
-        addDriverToTable(profileData[0].fullname, uid);
-    }
-
+    // Check if currentUserUid is in entries
+    currentUserIsRegistered = driversData.some(entry => entry.driverUid === currentUserUid);
     // Hide the button if he is in the championship
     if (isDriver && !currentUserIsRegistered) {
         document.getElementById('add-to-championship-button').style.display = 'block';
@@ -106,12 +96,22 @@ function addRaceToTable(race) {
     tbody.appendChild(row);
 }
 
-function addDriverToTable(driverName, uid) {
+async function addDriverToTable(uid) {
     const tbody = document.getElementById('tbody_championship_drivers');
     const row = document.createElement('tr');
     const nameCell = document.createElement('td');
     const link = document.createElement('a');
     link.href = `driver_profile.html?driverUid=${uid}`;
+
+    const { data, error } = await _supabase
+        .from('profiles')
+        .select('fullname')
+        .eq('uid', uid);
+    if (error) {
+        console.log('Error fetching driver name: ', error.message);
+        openModal('Error fetching driver names!');
+    }
+    const driverName = data[0].fullname;
     link.textContent = driverName;
     nameCell.appendChild(link);
     row.appendChild(nameCell);
