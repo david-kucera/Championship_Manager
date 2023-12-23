@@ -38,6 +38,8 @@ async function fetchAndDisplayRaceData(raceId) {
         openModal('Error fetching race results!');
     }
 
+    resultData.sort((a, b) => a.position - b.position);
+
     for (const result of resultData) {
         const uid = result.driverUid;
         const points = result.points;
@@ -63,15 +65,18 @@ async function fetchAndDisplayRaceData(raceId) {
             openModal('Error fetching driver details!');
         }
         const car = driverData[0].car;
-        addResult(name, car, position, time, points);
+        addResult(name, car, position, time, points, uid);
     }
 }
 
-function addResult(name, car, position, time, points) {
+function addResult(name, car, position, time, points, uid) {
     const tbody = document.getElementById('tbody_race_results');
     const row = document.createElement('tr');
     const nameCell = document.createElement('td');
-    nameCell.textContent = name;
+    const link = document.createElement('a');
+    link.href = `driver_profile.html?driverUid=${uid}`;
+    link.textContent = name;
+    nameCell.appendChild(link);
     const carCell = document.createElement('td');
     carCell.textContent = car;
     const positionCell = document.createElement('td');
