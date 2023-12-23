@@ -7,8 +7,14 @@ document.addEventListener('DOMContentLoaded', function() {
         fetchAndDisplayDriverData(driverUid);
         fetchAndDisplayRaceResults(driverUid);
     } else {
-        console.error('No driver ID provided in the URL');
-        openModal('No driver ID provided in the URL!');
+        const uid = getCookie('uid');
+        if (uid !== null) {
+            fetchAndDisplayDriverData(uid);
+            fetchAndDisplayRaceResults(uid);
+        } else {
+            console.error('No driver ID provided in the URL');
+            openModal('No driver ID provided in the URL!');
+        }
     }
 });
 
