@@ -6,11 +6,17 @@ document.addEventListener('DOMContentLoaded', function() {
     if (driverUid) {
         fetchAndDisplayDriverData(driverUid);
         fetchAndDisplayRaceResults(driverUid);
+        const filePath = `profile_pictures/${driverUid}/profile`;
+        const publicURL = 'https://cbpdfyauboisozcxuohi.supabase.co/storage/v1/object/public/' + filePath;
+        document.getElementById('profilePicImage').src = publicURL;
     } else {
         const uid = getCookie('uid');
         if (uid !== null) {
             fetchAndDisplayDriverData(uid);
             fetchAndDisplayRaceResults(uid);
+            const filePath = `profile_pictures/${uid}/profile`;
+            const publicURL = 'https://cbpdfyauboisozcxuohi.supabase.co/storage/v1/object/public/' + filePath;
+            document.getElementById('profilePicImage').src = publicURL;
         } else {
             console.error('No driver ID provided in the URL');
             openModal('No driver ID provided in the URL!');

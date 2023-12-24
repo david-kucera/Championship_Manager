@@ -214,3 +214,15 @@ async function uploadProfilePicture() {
         openModal('Please select a picture to upload.');
     }
 }
+
+async function displayProfilePicture() {
+    const uid = getCookie('uid');
+    if (uid) {
+        const filePath = `profile_pictures/${uid}/profile`;
+        const publicURL = 'https://cbpdfyauboisozcxuohi.supabase.co/storage/v1/object/public/' + filePath;
+        document.getElementById('profilePicImage').src = publicURL;
+    }
+}
+
+// Show current profile picture
+document.addEventListener('DOMContentLoaded', displayProfilePicture);
