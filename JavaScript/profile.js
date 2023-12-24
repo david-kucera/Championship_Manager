@@ -181,3 +181,36 @@ async function becomeADriver() {
         window.location.href = "profile.html";
     }, 1000);
 }
+
+async function uploadProfilePicture() {
+    const fileInput = document.getElementById('profilePicture');
+    if (fileInput.files.length > 0) {
+        const profilePicFile = fileInput.files[0];
+        const uid = getCookie('uid');
+        if (uid) {
+            const filePath = `profile_pictures/${uid}`;
+            try {
+                const { data, error } = await _supabase
+                    .storage
+                    .from(filePath)
+                    .upload('profile', profilePicFile, {
+                        cacheControl: '3600',
+                        upsert: true
+                    });
+
+                if (error) {
+                    throw error;
+                }
+
+                openModal('Profile picture uploaded successfully!');
+            } catch (error) {
+                console.error('Error uploading profile picture:', error.message);
+                openModal('Error uploading profile picture. Please try again.');
+            }
+        } else {
+            openModal('User UID not found. Please log in again.');
+        }
+    } else {
+        openModal('Please select a picture to upload.');
+    }
+}
