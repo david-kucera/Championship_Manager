@@ -29,6 +29,10 @@ async function fetchAndDisplayRaceData(raceId) {
         document.getElementById('description').textContent = race.description;
     }
 
+    const filePath = `maps/${race.location}`;
+    const publicURL = 'https://cbpdfyauboisozcxuohi.supabase.co/storage/v1/object/public/' + filePath;
+    document.getElementById('mapImage').src = publicURL;
+
     const { data: resultData, error: resultError } = await _supabase
         .from('raceResults')
         .select('*')
