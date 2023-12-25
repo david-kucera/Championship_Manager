@@ -19,6 +19,9 @@ function setLoginLogoutLink() {
         loginLogoutFooter.textContent = 'Login';
         loginLogoutFooter.href = 'login.html';
     }
+    if (isAdmin) {
+        document.getElementById('driver-profile-option').style.display = 'none';
+    }
 }
 
 // For footer handling of login/logout button
