@@ -83,19 +83,16 @@ img {
 .gold_leaderboard {
     color: gold;
     font-weight: bolder;
-    font-size: x-large;
 }
 
 .silver_leaderboard {
     color: silver;
     font-weight: bold;
-    font-size: large;
 }
 
 .bronze_leaderboard {
     color: saddlebrown;
     font-weight: bold;
-    font-size: large;
 }
 
 .profile_h1 {
