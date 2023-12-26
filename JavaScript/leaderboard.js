@@ -211,10 +211,6 @@ async function updateValues(newValues, originalValues) {
     } catch (error) {
         console.error('Error during updating data:', error.message);
         openModal('Error during updating data. Please try again.');
-    } finally {
-        setTimeout(() => {
-            window.location.reload();
-        }, 100);
     }
 }
 
