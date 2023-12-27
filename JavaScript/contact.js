@@ -14,9 +14,7 @@ async function submitForm(event) {
             openModal("Error sendinng form!");
         } else {
             openModal("Message successfully sent!");
-            setTimeout(function() {
-                window.location.href = "contact.html";
-            }, 1000);
+            document.getElementById('message').value = '';
         }
     } catch (error) {
         openModal("Error sending form!");
