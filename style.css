@@ -113,3 +113,19 @@ img {
 .margin-top-30 {
     margin-top: 30px;
 }
+
+.message {
+    background-color: #f9f9f9;
+    padding: 15px;
+    margin-bottom: 10px;
+    border-radius: 5px;
+}
+
+.delete-btn {
+    margin-top: 10px;
+}
+
+.reply-btn {
+    margin-top: 10px;
+    margin-right: 10px;
+}
