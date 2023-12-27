@@ -4,23 +4,36 @@ let isDriver = document.cookie.includes("role=driver");
 const loginLogoutFooter = document.getElementById('login-logout-footer');
 
 function setLoginLogoutLink() {
+    $('#admin-dropdown').hide();
     if (isAuthenticated) {
-        document.getElementById('login-option').style.display = 'none';
-        document.getElementById('profile-option').style.display = 'block';
-        document.getElementById('driver-profile-option').style.display = 'block';
-        document.getElementById('logout-option').style.display = 'block';
+        $('#login-option').hide();
+
+        $('#nav-dropdown').show();
+        if (isDriver) {
+            $('#driver-profile-option').show();
+        } else {
+            $('#driver-profile-option').hide();
+        }
+
+        $('#logout-option').show();
+
         loginLogoutFooter.textContent = 'Logout';
         loginLogoutFooter.href = 'index.html';
     } else {
-        document.getElementById('login-option').style.display = 'block';
-        document.getElementById('profile-option').style.display = 'none';
-        document.getElementById('driver-profile-option').style.display = 'none';
-        document.getElementById('logout-option').style.display = 'none';
+        $('#login-option').show();
+
+        $('#nav-dropdown').hide();
+        $('#profile-option').hide();
+        $('#driver-profile-option').hide();
+
+        $('#logout-option').hide();
         loginLogoutFooter.textContent = 'Login';
         loginLogoutFooter.href = 'login.html';
     }
+
     if (isAdmin) {
-        document.getElementById('driver-profile-option').style.display = 'none';
+        $('#driver-profile-option').hide();
+        $('#admin-dropdown').show();
     }
 }
 

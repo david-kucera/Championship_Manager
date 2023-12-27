@@ -35,7 +35,11 @@
 </div>
 
 <nav class="navbar navbar-expand-lg navbar-dark bg-primary">
-  <a class="navbar-brand" href="index.html">Championship Manager</a>
+  <a class="navbar-brand" href="#">
+    <img src="pics/favicon.ico" width="30" height="30" class="d-inline-block align-mid" alt="">
+    Championship Manager
+  </a>
+
   <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav"
           aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
     <span class="navbar-toggler-icon"></span>
@@ -52,16 +56,32 @@
       <li class="nav-item">
         <a class="nav-link" href="leaderboard.html">Leaderboard</a>
       </li>
-      <li id="driver-profile-option" style="display: none;">
-        <a class="nav-link" href="driver_profile.html">Open your profile</a>
+
+      <li class="nav-item dropdown" id="nav-dropdown">
+        <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+          Profile
+        </a>
+        <div class="dropdown-menu" aria-labelledby="navbarDropdown" id="profile-option">
+          <a class="dropdown-item" href="driver_profile.html" id="driver-profile-option">Open your profile</a>
+          <a class="dropdown-item" href="profile.html">Edit your profile</a>
+        </div>
       </li>
-      <li id="profile-option" style="display: none;">
-        <a class="nav-link" href="profile.html">Edit your profile</a>
+
+      <li class="nav-item dropdown" id="admin-dropdown">
+        <a class="nav-link dropdown-toggle" href="#" id="adminDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+          Manage
+        </a>
+        <div class="dropdown-menu" aria-labelledby="navbarDropdown">
+          <a class="dropdown-item" href="a_race_create.html">Create a race</a>
+          <a class="dropdown-item" href="a_add_result.html">Add race results</a>
+          <a class="dropdown-item" href="a_messages_contact_form.html">See messages</a>
+        </div>
       </li>
+
       <li id="login-option">
         <a class="nav-link" href="login.html">Login</a>
       </li>
-      <li id="logout-option" style="display: none;">
+      <li id="logout-option">
         <a class="nav-link" href="index.html" id="logout-link" onclick="logout()">Logout</a>
       </li>
     </ul>
