@@ -30,7 +30,6 @@ async function fetchAndDisplayDriverData(driverUid) {
         .select(`
             uid,
             car,
-            points,
             profiles (
                 fullname,
                 nationality,
@@ -53,7 +52,6 @@ async function fetchAndDisplayDriverData(driverUid) {
         document.getElementById('nationality').textContent = profileData.nationality;
         document.getElementById('date_of_birth').textContent = profileData.date_of_birth;
         document.getElementById('car').textContent = driverData.car;
-        document.getElementById('points').textContent = driverData.points;
         document.getElementById('description').textContent = profileData.description;
     }
 }
@@ -66,11 +64,16 @@ async function fetchAndDisplayRaceResults(driverUid) {
     if (resultError) {
         console.log('Error fetching race result data: ', resultError.message);
         openModal('Error fetching race result data!');
+        return;
     }
+
+    let totalPoints = 0;
+
     for (const race of resultData) {
         const raceId = race.raceId;
         const position = race.position;
         const points = race.points;
+        totalPoints += points
 
         const { data: raceData, error: raceError } = await _supabase
             .from('races')
@@ -85,7 +88,8 @@ async function fetchAndDisplayRaceResults(driverUid) {
         const raceLocation = raceData[0].location;
         addResult(raceId, raceName, raceLocation, raceDate, position, points);
     }
-    return;
+
+    document.getElementById('points').textContent = totalPoints;
 }
 
 function addResult(raceId, raceName, raceLocation, raceDate, position, points) {
