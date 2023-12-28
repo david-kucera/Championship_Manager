@@ -6,5 +6,69 @@
 </head>
 <body>
 
+<nav class="navbar navbar-expand-lg navbar-dark bg-primary">
+    <a class="navbar-brand" href="#">
+        <img src="pics/favicon.ico" width="30" height="30" class="d-inline-block align-mid" alt="">
+        Championship Manager
+    </a>
+
+    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav"
+            aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span>
+    </button>
+
+    <div class="collapse navbar-collapse" id="navbarNav">
+        <ul class="navbar-nav ml-auto">
+            <li class="nav-item">
+                <a class="nav-link" href="index.html">Home</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" href="championships.html">Championships</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" href="leaderboard.html">Leaderboard</a>
+            </li>
+
+            <li class="nav-item dropdown" id="nav-dropdown">
+                <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                    Profile
+                </a>
+                <div class="dropdown-menu" aria-labelledby="navbarDropdown" id="profile-option">
+                    <a class="dropdown-item" href="driver_profile.html" id="driver-profile-option">Open your profile</a>
+                    <a class="dropdown-item" href="profile.html">Edit your profile</a>
+                </div>
+            </li>
+
+            <li class="nav-item dropdown" id="admin-dropdown">
+                <a class="nav-link dropdown-toggle" href="#" id="adminDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                    Manage
+                </a>
+                <div class="dropdown-menu" aria-labelledby="navbarDropdown">
+                    <a class="dropdown-item" href="a_race_create.html">Create a race</a>
+                    <a class="dropdown-item" href="a_add_result.html">Add race results</a>
+                    <a class="dropdown-item" href="a_messages_contact_form.html">See messages</a>
+                </div>
+            </li>
+
+            <li class="nav-item dropdown" id="driver-dropdown">
+                <a class="nav-link dropdown-toggle" href="#" id="driverDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                    Manage
+                </a>
+                <div class="dropdown-menu" aria-labelledby="navbarDropdown">
+                    <a class="dropdown-item" href="d_results.html">My results</a>
+                    <a class="dropdown-item" href="d_championships.html">My championships</a>
+                </div>
+            </li>
+
+            <li id="login-option">
+                <a class="nav-link" href="login.html">Login</a>
+            </li>
+            <li id="logout-option">
+                <a class="nav-link" href="index.html" id="logout-link" onclick="logout()">Logout</a>
+            </li>
+        </ul>
+    </div>
+</nav>
+
 </body>
 </html>
