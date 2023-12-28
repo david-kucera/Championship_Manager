@@ -242,3 +242,33 @@ function revertCellsToDisplayMode(row, updatedRace) {
     locationCell.textContent = updatedRace.location;
     descriptionCell.textContent = updatedRace.description;
 }
+
+async function uploadLocationPicture() {
+    const fileInput = document.getElementById('locationPicture');
+    const name = document.getElementById('locationName').value;
+    console.log(name);
+
+    if (fileInput.files.length > 0) {
+        const locationPictureFile = fileInput.files[0];
+        const filePath = 'maps';
+
+        try {
+            const { data, error } = await _supabase
+                .storage
+                .from(filePath)
+                .upload(name, locationPictureFile, {
+                    cacheControl: '3600',
+                    upsert: true
+                });
+            if (error) {
+                throw error;
+            }
+            openModal('Location picture uploaded successfully!');
+        } catch (error) {
+            console.error('Error uploading location picture:', error.message);
+            openModal('Error uploading location picture. Please try again.');
+        }
+    } else {
+        openModal('Please select a picture to upload.');
+    }
+}

@@ -35,7 +35,7 @@
 </div>
 
 <nav class="navbar navbar-expand-lg navbar-dark bg-primary">
-    <a class="navbar-brand" href="#">
+    <a class="navbar-brand" href="index.html">
         <img src="pics/favicon.ico" width="30" height="30" class="d-inline-block align-mid" alt="">
         Championship Manager
     </a>
@@ -140,6 +140,21 @@
             <tbody id="tbody_races">
             </tbody>
         </table>
+    </div>
+
+    <h2 class="title_header_index01 mt-5">Upload a picture of a circuit</h2>
+    <div class="form-row">
+        <div class="form-group col-md-6">
+            <label for="locationName">Name of the location:</label>
+            <input type="text" class="form-control" id="locationName">
+        </div>
+        <div class="form-group col-md-6">
+            <label for="locationPicture">Choose a picture:</label>
+            <input type="file" class="form-control" id="locationPicture" accept="image/*">
+        </div>
+        <div class="form-group col-md-6">
+            <button class="btn btn-primary" onclick="uploadLocationPicture()">Upload</button>
+        </div>
     </div>
 </div>
 
