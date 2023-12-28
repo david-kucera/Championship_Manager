@@ -1,5 +1,8 @@
 document.addEventListener('DOMContentLoaded', async function () {
     const tableBody = document.getElementById('tbody-leaderboard');
+    const editButton = document.getElementById('editLeaderboardButton');
+    editButton.style.display = 'none';
+    let isEditing = false;
 
     const { data, error } = await _supabase
         .from('profiles')
@@ -8,78 +11,84 @@ document.addEventListener('DOMContentLoaded', async function () {
             fullname,
             nationality,
             drivers!inner (
-              car,
+              car
+            ),
+            raceResults (
               points
             )
           `);
-    const editButton = document.getElementById('editLeaderboardButton');
-    editButton.style.display = 'none';
-    let isEditing = false;
-
     if (error) {
         console.error('Error fetching data:', error.message);
         openModal('Error fetching data!');
-    } else {
-        data.sort((a, b) => {
-            if (b.drivers.points !== a.drivers.points) {
-                return b.drivers.points - a.drivers.points;
-            } else {
-                return a.fullname.localeCompare(b.fullname);
-            }
-        });
-
-        data.forEach((profile, index) => {
-            const row = document.createElement('tr');
-
-            const cell1 = document.createElement('td');
-            cell1.textContent = index + 1;  // Position
-            const cell2 = document.createElement('td');
-            const link = document.createElement('a');
-            link.href = `driver_profile.html?driverUid=${profile.uid}`;
-            link.textContent = profile.fullname;
-            cell2.appendChild(link);
-            const cell3 = document.createElement('td');
-            cell3.textContent = profile.nationality;
-            const cell4 = document.createElement('td');
-            cell4.textContent = profile.drivers.car;
-            const cell5 = document.createElement('td');
-            cell5.textContent = profile.drivers.points;
-
-            row.appendChild(cell1);
-            row.appendChild(cell2);
-            row.appendChild(cell3);
-            row.appendChild(cell4);
-            row.appendChild(cell5);
-
-            if (index === 0) { row.classList.add('gold_leaderboard') }
-            if (index === 1) { row.classList.add('silver_leaderboard') }
-            if (index === 2) { row.classList.add('bronze_leaderboard') }
-
-            if (isAuthenticated && isAdmin) {
-                // Edit row buttons
-                const editRowButtonCell = document.createElement('td');
-                const editRowButton = document.createElement('button');
-                editRowButton.textContent = 'Edit row';
-                editRowButton.className = 'btn btn-warning';
-                editRowButton.style.padding = '0.375rem 0.75rem';
-                editRowButton.style.fontSize = '1rem';
-                editRowButton.style.display = 'none';
-                editRowButton.onclick = function () {
-                    editRow(index);
-                };
-                editRowButtonCell.appendChild(editRowButton);
-                row.appendChild(editRowButtonCell);
-            }
-            tableBody.appendChild(row);
-        });
+        return;
     }
+
+    // Sum points for each driver
+    data.forEach(profile => {
+        profile.totalPoints = profile.raceResults.reduce((acc, curr) => acc + curr.points, 0);
+    });
+
+    // Sort by points, then by name
+    data.sort((a, b) => {
+        if (b.totalPoints !== a.totalPoints) {
+            return b.totalPoints - a.totalPoints;
+        } else {
+            return a.fullname.localeCompare(b.fullname);
+        }
+    });
+
+    data.forEach((profile, index) => {
+        const row = document.createElement('tr');
+
+        const cell1 = document.createElement('td');
+        cell1.textContent = index + 1;  // Position
+        const cell2 = document.createElement('td');
+        const link = document.createElement('a');
+        link.href = `driver_profile.html?driverUid=${profile.uid}`;
+        link.textContent = profile.fullname;
+        cell2.appendChild(link);
+        const cell3 = document.createElement('td');
+        cell3.textContent = profile.nationality;
+        const cell4 = document.createElement('td');
+        cell4.textContent = profile.drivers.car;
+        const cell5 = document.createElement('td');
+        cell5.textContent = profile.totalPoints;
+
+        row.appendChild(cell1);
+        row.appendChild(cell2);
+        row.appendChild(cell3);
+        row.appendChild(cell4);
+        row.appendChild(cell5);
+
+        if (index === 0) { row.classList.add('gold_leaderboard') }
+        if (index === 1) { row.classList.add('silver_leaderboard') }
+        if (index === 2) { row.classList.add('bronze_leaderboard') }
+
+        if (isAuthenticated && isAdmin) {
+            // Edit row buttons
+            const editRowButtonCell = document.createElement('td');
+            const editRowButton = document.createElement('button');
+            editRowButton.textContent = 'Edit row';
+            editRowButton.className = 'btn btn-warning';
+            editRowButton.style.padding = '0.375rem 0.75rem';
+            editRowButton.style.fontSize = '1rem';
+            editRowButton.style.display = 'none';
+            editRowButton.onclick = function () {
+                editRow(index);
+            };
+            editRowButtonCell.appendChild(editRowButton);
+            row.appendChild(editRowButtonCell);
+        }
+        tableBody.appendChild(row);
+    });
+
 
     if (isAuthenticated && isAdmin) {
         editButton.style.display = 'block';
     }
     editButton.addEventListener('click', function () {
         isEditing = !isEditing;
-        const isVisible = isEditing; // Change this based on your logic
+        const isVisible = isEditing;
         toggleEditButtons(isAuthenticated, isEditing, isVisible);
     });
     toggleEditButtons(isAuthenticated, isEditing, false);
@@ -107,7 +116,7 @@ function editRow(rowIndex) {
         const originalValues = Array.from(inputs).map(input => input.value);
 
         // Skip the first and last cells which should not be editable (button)
-        for (let i = 1; i < inputs.length - 1; i++) {
+        for (let i = 1; i < inputs.length - 2; i++) {
             const cell = editedRow.cells[i];
             cell.textContent = inputs[i].value;
         }
@@ -125,7 +134,7 @@ function editRow(rowIndex) {
         const originalValues = Array.from(cells).map(cell => cell.textContent);
 
         // Skip the first and last cells which should not be editable
-        for (let i = 1; i < cells.length - 1; i++) {
+        for (let i = 1; i < cells.length - 2; i++) {
             // Check if the cell is editable
             if (isCellEditable(cells, i)) {
                 const input = document.createElement('input');
