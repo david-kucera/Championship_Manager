@@ -5,14 +5,18 @@ const loginLogoutFooter = document.getElementById('login-logout-footer');
 
 function setLoginLogoutLink() {
     $('#admin-dropdown').hide();
+    $('#driver-dropdown').hide();
+
     if (isAuthenticated) {
         $('#login-option').hide();
 
         $('#nav-dropdown').show();
         if (isDriver) {
             $('#driver-profile-option').show();
+            $('#driver-dropdown').show();
         } else {
             $('#driver-profile-option').hide();
+            $('#driver-dropdown').hide();
         }
 
         $('#logout-option').show();
