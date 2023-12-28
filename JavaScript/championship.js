@@ -43,22 +43,53 @@ async function fetchAndDisplayChampionshipData(championshipId) {
 
     const { data: driversData, error: driversError } = await _supabase
         .from('driversInChampionship')
-        .select(`
-            driverUid,
-            drivers(points)
-            profiles(fullname)
-        `)
-        .eq('championshipId', championshipId)
-        .order('points', { foreignTable: 'drivers', ascending: false });
+        .select('driverUid')
+        .eq('championshipId', championshipId);
     if (driversError) {
         console.error('Error fetching drivers data:', driversError.message);
         openModal("Error fetching drivers data!");
     }
 
-    // Sort by points
-    driversData.sort((a, b) => b.drivers.points - a.drivers.points);
-    driversData.forEach(entry => {
-        addDriverToTable(entry.driverUid);
+    let driversWithPoints = [];
+
+    for (const entry of driversData) {
+        const { data: profileData, error: profileError } = await _supabase
+            .from('profiles')
+            .select('fullname')
+            .eq('uid', entry.driverUid);
+        if (profileError) {
+            console.error('Error fetching driver name:', profileError.message);
+            continue;
+        }
+        const fullname = profileData[0].fullname;
+
+        // Fetch and calculate total points for the driver in the championship
+        const { data: pointsData, error: pointsError } = await _supabase
+            .from('raceResults')
+            .select('points')
+            .eq('driverUid', entry.driverUid)
+            .in('raceId', (await getRaceIdsForChampionship(championshipId)));
+
+        if (pointsError) {
+            console.error('Error fetching driver points:', pointsError.message);
+            continue;
+        }
+
+        const totalPoints = pointsData.reduce((acc, curr) => acc + curr.points, 0);
+
+        driversWithPoints.push({
+            uid: entry.driverUid,
+            fullname,
+            totalPoints
+        });
+    }
+
+    // Sort the array in descending order based on points
+    driversWithPoints.sort((a, b) => b.totalPoints - a.totalPoints);
+
+    // Display each driver in the sorted order
+    driversWithPoints.forEach(driver => {
+        addDriverToTable(driver.uid, driver.fullname, driver.totalPoints);
     });
 
     let currentUserIsRegistered = false;
@@ -96,27 +127,39 @@ function addRaceToTable(race) {
     tbody.appendChild(row);
 }
 
-async function addDriverToTable(uid) {
+function addDriverToTable(uid, fullname, totalPoints) {
     const tbody = document.getElementById('tbody_championship_drivers');
     const row = document.createElement('tr');
+
     const nameCell = document.createElement('td');
     const link = document.createElement('a');
     link.href = `driver_profile.html?driverUid=${uid}`;
-
-    const { data, error } = await _supabase
-        .from('profiles')
-        .select('fullname')
-        .eq('uid', uid);
-    if (error) {
-        console.log('Error fetching driver name: ', error.message);
-        openModal('Error fetching driver names!');
-    }
-    const driverName = data[0].fullname;
-    link.textContent = driverName;
+    link.textContent = fullname;
     nameCell.appendChild(link);
+
+    const pointsCell = document.createElement('td');
+    pointsCell.textContent = totalPoints;
+
     row.appendChild(nameCell);
+    row.appendChild(pointsCell);
     tbody.appendChild(row);
 }
+
+
+async function getRaceIdsForChampionship(championshipId) {
+    const { data: raceData, error: raceError } = await _supabase
+        .from('races')
+        .select('id')
+        .eq('championshipId', championshipId);
+
+    if (raceError) {
+        console.error('Error fetching race IDs:', raceError.message);
+        return [];
+    }
+
+    return raceData.map(race => race.id);
+}
+
 
 async function addDriverToChampionship(championshipId) {
     let driverUid = getCookie('uid');
