@@ -11,6 +11,15 @@ document.addEventListener('DOMContentLoaded', async function() {
     championshipsData.sort((a, b) => a.name.localeCompare(b.name));
 
     const championshipSelect = document.getElementById('championshipId');
+    championshipSelect.innerHTML = '';
+
+    let placeholderOption = document.createElement('option');
+    placeholderOption.value = '';
+    placeholderOption.text = 'Select a Championship';
+    placeholderOption.disabled = true;
+    placeholderOption.selected = true;
+    championshipSelect.appendChild(placeholderOption);
+
     championshipsData.forEach(championship => {
         let option = document.createElement('option');
         option.value = championship.id;
@@ -26,9 +35,30 @@ document.addEventListener('DOMContentLoaded', async function() {
 
 document.getElementById('championshipId').addEventListener('change', function(event) {
     const selectedChampionshipId = event.target.value;
-    loadRacesForChampionship(selectedChampionshipId);
-    loadDriversForChampionship(selectedChampionshipId);
+
+    if (selectedChampionshipId) {
+        loadRacesForChampionship(selectedChampionshipId);
+        loadDriversForChampionship(selectedChampionshipId);
+    } else {
+        document.getElementById('raceName').innerHTML = '';
+        document.getElementById('driverUid').innerHTML = '';
+    }
 });
+
+document.getElementById('searchInput').addEventListener('input', function(e) {
+    const searchValue = e.target.value.toLowerCase();
+    const tableRows = document.querySelectorAll('#tbody_results tr');
+
+    tableRows.forEach(row => {
+        const raceName = row.querySelector('.race-name-cell').textContent.toLowerCase();
+        if (raceName.includes(searchValue)) {
+            row.style.display = ""; // Show the row
+        } else {
+            row.style.display = "none"; // Hide the row
+        }
+    });
+});
+
 
 async function loadResults() {
     const { data: resultData, error: resultError } = await _supabase
@@ -49,7 +79,15 @@ async function loadResults() {
         return;
     }
 
-    for (let result of resultData) {
+    const sortedResultData = resultData.sort((a, b) => {
+        const raceNameCompare = a.race.name.localeCompare(b.race.name);
+        if (raceNameCompare !== 0) {
+            return raceNameCompare;
+        }
+        return a.position - b.position;
+    });
+
+    for (let result of sortedResultData) {
         addResultToTable(result);
     }
 }
@@ -60,6 +98,7 @@ function addResultToTable(result) {
     row.setAttribute('id', `result-${result.id}`);
 
     const nameCell = document.createElement('td');
+    nameCell.className = 'race-name-cell';
     const raceLink = document.createElement('a');
     raceLink.href = `race.html?raceId=${result.raceId}`;
     raceLink.textContent = result.race.name;
@@ -146,6 +185,8 @@ async function loadRacesForChampionship(championshipId) {
         option.text = race.name;
         raceSelect.appendChild(option);
     });
+
+    raceSelect.disabled = racesData.length === 0;
 }
 
 async function loadDriversForChampionship(championshipId) {
@@ -182,6 +223,8 @@ async function loadDriversForChampionship(championshipId) {
             driverSelect.appendChild(option);
         }
     }
+
+    driverSelect.disabled = driversData.length === 0;
 }
 
 async function deleteResult(resultId, rowElement) {
