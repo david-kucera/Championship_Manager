@@ -154,7 +154,7 @@ async function changeValue(updatedValue, fieldName) {
 async function becomeADriver() {
     const { data, error } = await _supabase
         .from('drivers')
-        .insert([{ uid: uid, car: '***', points: 0 }]);
+        .insert([{ uid: uid, car: '***'}]);
 
     if (error) {
         console.error('Error inserting into drivers table:', error.message);
