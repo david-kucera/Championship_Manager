@@ -2,9 +2,38 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>Title</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Add race results | Championship Manager</title>
+    <link rel="icon" type="image/x-icon" href="pics/favicon.ico">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <link rel="stylesheet" href="style.css">
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <script src="JavaScript/databaseinc.js"></script>
+    <script src="JavaScript/modals.js"></script>
+
 </head>
 <body>
+
+<div class="modal fade" id="errorModal" tabindex="-1" role="dialog" aria-labelledby="errorModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="errorModalLabel">Info</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <p id="error-message"></p>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+            </div>
+        </div>
+    </div>
+</div>
 
 <nav class="navbar navbar-expand-lg navbar-dark bg-primary">
     <a class="navbar-brand" href="index.html">
@@ -69,6 +98,75 @@
         </ul>
     </div>
 </nav>
+
+<div class="container mt-4">
+    <h1 class="title_header_index01">Add results</h1>
+    <p></p>
+    <form id="addResultForm">
+        <div class="form-group">
+            <label for="championshipId">Championship</label>
+            <select class="form-control" id="championshipId" required>
+            </select>
+        </div>
+        <div class="form-group">
+            <label for="raceName">Race</label>
+            <select class="form-control" id="raceName" required>
+            </select>
+        </div>
+        <div class="form-group">
+            <label for="driverUid">Driver</label>
+            <select class="form-control" id="driverUid" required>
+            </select>
+        </div>
+        <div class="form-group">
+            <label for="position">Position</label>
+            <input type="text" class="form-control" id="position">
+        </div>
+        <div class="form-group">
+            <label for="time">Time</label>
+            <input type="text" class="form-control" id="time">
+        </div>
+        <div class="form-group">
+            <label for="points">Points</label>
+            <input class="form-control" id="points">
+        </div>
+        <button type="submit" class="btn btn-primary">Add result</button>
+    </form>
+
+    <h2 class="title_header_index01 mt-5">All Results</h2>
+    <div class="table-responsive">
+        <table class="table table-sm mt-3">
+            <thead>
+            <tr>
+                <th>Race</th>
+                <th>Driver</th>
+                <th>Position</th>
+                <th>Time</th>
+                <th>Points</th>
+            </tr>
+            </thead>
+            <tbody id="tbody_results">
+            </tbody>
+        </table>
+    </div>
+
+</div>
+
+<div class="footer">
+    <div class="container">
+        <p>&copy; 2023 Championship Manager</p>
+        <a href="contact.html">Contact</a>
+        <span class="separator">|</span>
+        <a href="how_to_use.html">How to Use</a>
+        <span class="separator">|</span>
+        <a href="login.html" id="login-logout-footer" onclick="toggleLoginLogout()">Login</a>
+    </div>
+</div>
+
+<script src="JavaScript/authentication.js"></script>
+<script src="JavaScript/logout.js"></script>
+<script src="JavaScript/cookieHandler.js"></script>
+<script src="JavaScript/add_results_admin.js"></script>
 
 </body>
 </html>
