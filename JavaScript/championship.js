@@ -37,6 +37,16 @@ async function fetchAndDisplayChampionshipData(championshipId) {
         openModal('Error fetching race data!');
     }
 
+    // https://www.scaler.com/topics/convert-string-to-date-javascript/
+    raceData.sort((a, b) => {
+        const [dayA, monthA, yearA] = a.date.split('.').map(Number);
+        const [dayB, monthB, yearB] = b.date.split('.').map(Number);
+        const dateA = new Date(yearA, monthA - 1, dayA);
+        const dateB = new Date(yearB, monthB - 1, dayB);
+
+        return dateB - dateA;
+    });
+
     for (const race of raceData) {
         addRaceToTable(race);
     }
@@ -105,6 +115,12 @@ async function fetchAndDisplayChampionshipData(championshipId) {
     } else {
         document.getElementById('add-to-championship-button').style.display = 'none';
     }
+}
+
+function convertDateToComparable(dateString) {
+    // Convert 'DD.MM.YYYY' to 'YYYYMMDD'
+    const parts = dateString.split('.');
+    return `${parts[2]}${parts[1]}${parts[0]}`;
 }
 
 function addRaceToTable(race) {
