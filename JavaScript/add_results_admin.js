@@ -52,9 +52,9 @@ document.getElementById('searchInput').addEventListener('input', function(e) {
     tableRows.forEach(row => {
         const raceName = row.querySelector('.race-name-cell').textContent.toLowerCase();
         if (raceName.includes(searchValue)) {
-            row.style.display = ""; // Show the row
+            row.style.display = "";
         } else {
-            row.style.display = "none"; // Hide the row
+            row.style.display = "none";
         }
     });
 });

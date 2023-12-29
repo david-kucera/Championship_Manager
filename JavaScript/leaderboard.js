@@ -82,6 +82,9 @@ document.addEventListener('DOMContentLoaded', async function () {
         tableBody.appendChild(row);
     });
 
+    const searchInput = document.getElementById('searchInput');
+    searchInput.addEventListener('keyup', filterDriversByName);
+
 
     if (isAuthenticated && isAdmin) {
         editButton.style.display = 'block';
@@ -93,6 +96,25 @@ document.addEventListener('DOMContentLoaded', async function () {
     });
     toggleEditButtons(isAuthenticated, isEditing, false);
 });
+
+function filterDriversByName() {
+    const input = document.getElementById('searchInput');
+    const filter = input.value.toUpperCase();
+    const tableBody = document.getElementById('tbody-leaderboard');
+    const rows = tableBody.getElementsByTagName('tr');
+
+    for (let i = 0; i < rows.length; i++) {
+        const driverCell = rows[i].getElementsByTagName('td')[1];
+        if (driverCell) {
+            const driverName = driverCell.textContent || driverCell.innerText;
+            if (driverName.toUpperCase().indexOf(filter) > -1) {
+                rows[i].style.display = "";
+            } else {
+                rows[i].style.display = "none";
+            }
+        }
+    }
+}
 
 // Modify the toggleEditButtons function
 function toggleEditButtons(isAuthenticated, isEditing, isVisible) {
