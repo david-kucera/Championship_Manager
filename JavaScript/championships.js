@@ -62,6 +62,9 @@ document.addEventListener('DOMContentLoaded', async function () {
         });
     }
 
+    const searchInput = document.getElementById('searchInput');
+    searchInput.addEventListener('keyup', filterChampionshipsByName);
+
     editButton.addEventListener('click', function() {
         isEditing = !isEditing;
         toggleRemoveButtons(isAuthenticated, isEditing);
@@ -71,6 +74,25 @@ document.addEventListener('DOMContentLoaded', async function () {
     toggleRemoveButtons(isAuthenticated, isEditing);
     toggleEditButtons(isAuthenticated, isEditing);
 });
+
+function filterChampionshipsByName() {
+    const input = document.getElementById('searchInput');
+    const filter = input.value.toUpperCase();
+    const tableBody = document.getElementById('tbody_championships');
+    const rows = tableBody.getElementsByTagName('tr');
+
+    for (let i = 0; i < rows.length; i++) {
+        const championshipCell = rows[i].getElementsByTagName('td')[0];
+        if (championshipCell) {
+            const championshipName = championshipCell.textContent || championshipCell.innerText;
+            if (championshipName.toUpperCase().indexOf(filter) > -1) {
+                rows[i].style.display = "";
+            } else {
+                rows[i].style.display = "none";
+            }
+        }
+    }
+}
 
 // Function to show the remove buttons after clicking on edit button
 function toggleRemoveButtons(isAuthenticated, isEditing) {
