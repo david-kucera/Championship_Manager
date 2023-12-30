@@ -1,3 +1,19 @@
+document.getElementById('searchInput').addEventListener('keyup', filterMessages);
+
+function filterMessages() {
+    let searchValue = document.getElementById('searchInput').value.toLowerCase();
+    let messageDivs = document.querySelectorAll('#messageList .message');
+
+    messageDivs.forEach(div => {
+        let email = div.querySelector('p strong').nextSibling.textContent.toLowerCase();
+        if (email.includes(searchValue)) {
+            div.style.display = '';
+        } else {
+            div.style.display = 'none';
+        }
+    });
+}
+
 async function getMessages() {
     const { data, error } = await _supabase
         .from('contactFormSubmissions')
