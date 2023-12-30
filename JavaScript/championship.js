@@ -8,6 +8,9 @@ document.addEventListener('DOMContentLoaded', function() {
     } else {
         console.error('No championship ID provided in the URL');
     }
+
+    document.getElementById('searchInputRaces').addEventListener('input', filterRacesByName);
+    document.getElementById('searchInputDrivers').addEventListener('input', filterDriversByName);
 });
 
 async function fetchAndDisplayChampionshipData(championshipId) {
@@ -196,5 +199,43 @@ async function addDriverToChampionship(championshipId) {
     } catch (err) {
         console.error("Error adding driver to championship:", err.message);
         openModal("Error when adding to the championship.");
+    }
+}
+
+function filterRacesByName() {
+    const input = document.getElementById('searchInputRaces');
+    const filter = input.value.toUpperCase();
+    const tableBody = document.getElementById('tbody_championship_races');
+    const rows = tableBody.getElementsByTagName('tr');
+
+    for (let i = 0; i < rows.length; i++) {
+        const raceCell = rows[i].getElementsByTagName('td')[0];
+        if (raceCell) {
+            const raceName = raceCell.textContent || raceCell.innerText;
+            if (raceName.toUpperCase().indexOf(filter) > -1) {
+                rows[i].style.display = "";
+            } else {
+                rows[i].style.display = "none";
+            }
+        }
+    }
+}
+
+function filterDriversByName() {
+    const input = document.getElementById('searchInputDrivers');
+    const filter = input.value.toUpperCase();
+    const tableBody = document.getElementById('tbody_championship_drivers');
+    const rows = tableBody.getElementsByTagName('tr');
+
+    for (let i = 0; i < rows.length; i++) {
+        const driverCell = rows[i].getElementsByTagName('td')[0];
+        if (driverCell) {
+            const driverName = driverCell.textContent || driverCell.innerText;
+            if (driverName.toUpperCase().indexOf(filter) > -1) {
+                rows[i].style.display = "";
+            } else {
+                rows[i].style.display = "none";
+            }
+        }
     }
 }
