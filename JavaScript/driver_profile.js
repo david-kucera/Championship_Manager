@@ -22,6 +22,8 @@ document.addEventListener('DOMContentLoaded', function() {
             openModal('No driver ID provided in the URL!');
         }
     }
+
+    document.getElementById('searchInputRaces').addEventListener('input', filterRacesByName);
 });
 
 async function fetchAndDisplayDriverData(driverUid) {
@@ -116,4 +118,23 @@ function addResult(raceId, raceName, raceLocation, raceDate, position, points) {
     row.appendChild(positionCell);
     row.appendChild(pointsCell);
     tbody.appendChild(row);
+}
+
+function filterRacesByName() {
+    const input = document.getElementById('searchInputRaces');
+    const filter = input.value.toUpperCase();
+    const tableBody = document.getElementById('tbody_driver_races');
+    const rows = tableBody.getElementsByTagName('tr');
+
+    for (let i = 0; i < rows.length; i++) {
+        const raceCell = rows[i].getElementsByTagName('td')[0];
+        if (raceCell) {
+            const raceName = raceCell.textContent || raceCell.innerText;
+            if (raceName.toUpperCase().indexOf(filter) > -1) {
+                rows[i].style.display = "";
+            } else {
+                rows[i].style.display = "none";
+            }
+        }
+    }
 }
