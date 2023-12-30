@@ -54,4 +54,25 @@ document.addEventListener('DOMContentLoaded', async function () {
 
         tableBody.appendChild(row);
     });
+
+    document.getElementById('searchInput').addEventListener('input', filterChampionshipsByName);
 });
+
+function filterChampionshipsByName() {
+    const input = document.getElementById('searchInput');
+    const filter = input.value.toUpperCase();
+    const tableBody = document.getElementById('tbody_championships');
+    const rows = tableBody.getElementsByTagName('tr');
+
+    for (let i = 0; i < rows.length; i++) {
+        const championshipCell = rows[i].getElementsByTagName('td')[0];
+        if (championshipCell) {
+            const championshipName = championshipCell.textContent || championshipCell.innerText;
+            if (championshipName.toUpperCase().indexOf(filter) > -1) {
+                rows[i].style.display = "";
+            } else {
+                rows[i].style.display = "none";
+            }
+        }
+    }
+}
