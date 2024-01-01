@@ -7,6 +7,8 @@ document.addEventListener('DOMContentLoaded', function() {
         fetchAndDisplayChampionshipData(championshipId);
     } else {
         console.error('No championship ID provided in the URL');
+        document.getElementById("errorModalLabel").textContent = 'Error';
+        openModal('No championship ID provided in the URL!');
     }
 
     document.getElementById('searchInputRaces').addEventListener('input', filterRacesByName);
@@ -14,10 +16,14 @@ document.addEventListener('DOMContentLoaded', function() {
 });
 
 async function fetchAndDisplayChampionshipData(championshipId) {
-    const { data, error } = await _supabase.from('championships').select('*').eq('id', championshipId);
-
+    const { data, error } = await _supabase
+        .from('championships')
+        .select('*')
+        .eq('id', championshipId);
     if (error) {
+        document.getElementById("errorModalLabel").textContent = 'Error';
         console.error('Error fetching championship data:', error.message);
+        openModal("Error fetching championship data!");
         return;
     }
 
@@ -34,8 +40,8 @@ async function fetchAndDisplayChampionshipData(championshipId) {
         .from('races')
         .select('*')
         .eq('championshipId', championshipId);
-
     if (raceError) {
+        document.getElementById("errorModalLabel").textContent = 'Error';
         console.error('Error fetching race data:', raceError.message);
         openModal('Error fetching race data!');
     }
@@ -59,6 +65,7 @@ async function fetchAndDisplayChampionshipData(championshipId) {
         .select('driverUid')
         .eq('championshipId', championshipId);
     if (driversError) {
+        document.getElementById("errorModalLabel").textContent = 'Error';
         console.error('Error fetching drivers data:', driversError.message);
         openModal("Error fetching drivers data!");
     }
@@ -82,7 +89,6 @@ async function fetchAndDisplayChampionshipData(championshipId) {
             .select('points')
             .eq('driverUid', entry.driverUid)
             .in('raceId', (await getRaceIdsForChampionship(championshipId)));
-
         if (pointsError) {
             console.error('Error fetching driver points:', pointsError.message);
             continue;
@@ -193,10 +199,11 @@ async function addDriverToChampionship(championshipId) {
         ]);
 
         if (error) throw error;
-
+        document.getElementById("errorModalLabel").textContent = 'Success';
         console.log("Driver added to championship successfully:", data);
         openModal("You were successfully added to the championship!");
     } catch (err) {
+        document.getElementById("errorModalLabel").textContent = 'Error';
         console.error("Error adding driver to championship:", err.message);
         openModal("Error when adding to the championship.");
     }

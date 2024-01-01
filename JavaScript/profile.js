@@ -17,6 +17,7 @@ async function populateFields() {
                 .single();
 
             if (error) {
+                document.getElementById("errorModalLabel").textContent = 'Error';
                 console.error('Error fetching profiles data:', error.message);
                 openModal('Error fetching profiles data!');
                 return;
@@ -35,6 +36,7 @@ async function populateFields() {
                     driverButtonDiv.style.display = role !== 'driver' ? 'block' : 'none';
                 }
             } else {
+                document.getElementById("errorModalLabel").textContent = 'Error';
                 openModal('User data not found in the profiles table!');
             }
 
@@ -59,6 +61,7 @@ async function populateFields() {
             }
 
         } catch (error) {
+            document.getElementById("errorModalLabel").textContent = 'Error';
             console.error('Error fetching user data:', error.message);
             openModal('Error fetching user data!');
         }
@@ -99,14 +102,17 @@ async function changeValue(updatedValue, fieldName) {
         try {
             const { data, error } = await _supabase.auth.updateUser({email: updatedValue})
             if (error) {
+                document.getElementById("errorModalLabel").textContent = 'Error';
                 console.error(`Error updating ${fieldName} in Supabase:`, error.message);
                 openModal(`Error updating ${fieldName} in Supabase!`);
                 return;
             }
+            document.getElementById("errorModalLabel").textContent = 'Info';
             openModal("Please confirm the changes on both emails to see the new changes!");
             return;
 
         } catch (error) {
+            document.getElementById("errorModalLabel").textContent = 'Error';
             console.error('Error updating user data in Supabase:', error.message);
             openModal('Error updating user data in Supabase!');
             return;
@@ -122,8 +128,10 @@ async function changeValue(updatedValue, fieldName) {
             if (error) {
                 throw error;
             }
+            document.getElementById("errorModalLabel").textContent = 'Success';
             openModal('Car updated successfully in Supabase!');
         } catch (error) {
+            document.getElementById("errorModalLabel").textContent = 'Error';
             console.error('Error updating car in Supabase:', error.message);
             openModal('Error updating car in Supabase!');
         }
@@ -136,14 +144,17 @@ async function changeValue(updatedValue, fieldName) {
                 .eq('uid', uid);
 
             if (error) {
+                document.getElementById("errorModalLabel").textContent = 'Error';
                 console.error(`Error updating ${fieldName} in Supabase:`, error.message);
                 openModal('Error updating field in Supabase!');
                 return;
             }
+            document.getElementById("errorModalLabel").textContent = 'Success';
             openModal(`${fieldName} updated sucessfully in Supabase!`);
             return;
 
         } catch (error) {
+            document.getElementById("errorModalLabel").textContent = 'Error';
             console.error('Error updating user data in Supabase:', error.message);
             openModal('Error updating user data in Supabase!');
             return;
@@ -157,6 +168,7 @@ async function becomeADriver() {
         .insert([{ uid: uid, car: '***'}]);
 
     if (error) {
+        document.getElementById("errorModalLabel").textContent = 'Error';
         console.error('Error inserting into drivers table:', error.message);
         openModal('Error becoming a driver. Please try again.');
         return;
@@ -168,11 +180,13 @@ async function becomeADriver() {
         .eq('uid', uid);
 
     if (profileError) {
+        document.getElementById("errorModalLabel").textContent = 'Error';
         console.error('Error updating role in profiles table:', profileError.message);
         openModal('Error updating your role. Please contact support.');
         return;
     }
 
+    document.getElementById("errorModalLabel").textContent = 'Success';
     console.log('Successfully became a driver:', data);
     openModal('You are now registered as a driver!');
     document.cookie = 'role=driver; path=/';
@@ -202,15 +216,19 @@ async function uploadProfilePicture() {
                     throw error;
                 }
 
+                document.getElementById("errorModalLabel").textContent = 'Success';
                 openModal('Profile picture uploaded successfully!');
             } catch (error) {
+                document.getElementById("errorModalLabel").textContent = 'Error';
                 console.error('Error uploading profile picture:', error.message);
                 openModal('Error uploading profile picture. Please try again.');
             }
         } else {
+            document.getElementById("errorModalLabel").textContent = 'Error';
             openModal('User UID not found. Please log in again.');
         }
     } else {
+        document.getElementById("errorModalLabel").textContent = 'Info';
         openModal('Please select a picture to upload.');
     }
 }

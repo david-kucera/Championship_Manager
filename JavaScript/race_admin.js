@@ -5,6 +5,7 @@ document.addEventListener('DOMContentLoaded', async function() {
         .from('championships')
         .select('name, id');
     if (championshipsError) {
+        document.getElementById("errorModalLabel").textContent = 'Error';
         openModal("Error fetching championships! Try again.");
         console.log('Error fetching championships:', championshipsError.message);
     }
@@ -31,6 +32,7 @@ async function loadRaces() {
         .from('races')
         .select('*');
     if (raceError) {
+        document.getElementById("errorModalLabel").textContent = 'Error';
         openModal("Error fetching race data! Try again.");
         console.log('Error fetching race data:', raceError.message);
         return;
@@ -121,11 +123,13 @@ async function createRace() {
         }])
         .select();
     if (error) {
+        document.getElementById("errorModalLabel").textContent = 'Error';
         openModal("Error saving data into database! Try again.");
         console.log('Error saving data into database:', error.message);
         return;
     }
     console.log(data);
+    document.getElementById("errorModalLabel").textContent = 'Success';
     openModal("Successfully added to races!");
     if (data && data.length > 0) {
         addRaceToTable({
@@ -143,8 +147,8 @@ async function deleteRace(raceId, row) {
         .from('races')
         .delete()
         .match({ id: raceId });
-
     if (error) {
+        document.getElementById("errorModalLabel").textContent = 'Error';
         openModal("Error deleting race! Try again.");
         console.log('Error deleting race:', error.message);
     } else {
@@ -216,8 +220,8 @@ async function updateRaceInDatabase(raceId, updatedRace, row) {
         .from('races')
         .update(updatedRace)
         .match({ id: raceId });
-
     if (error) {
+        document.getElementById("errorModalLabel").textContent = 'Error';
         openModal("Error updating race! Try again.");
         console.log('Error updating race:', error.message);
     } else {
@@ -265,12 +269,15 @@ async function uploadLocationPicture() {
             if (error) {
                 throw error;
             }
+            document.getElementById("errorModalLabel").textContent = 'Success';
             openModal('Location picture uploaded successfully!');
         } catch (error) {
+            document.getElementById("errorModalLabel").textContent = 'Error';
             console.error('Error uploading location picture:', error.message);
             openModal('Error uploading location picture. Please try again.');
         }
     } else {
+        document.getElementById("errorModalLabel").textContent = 'Info';
         openModal('Please select a picture to upload.');
     }
 }

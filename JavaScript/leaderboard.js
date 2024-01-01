@@ -18,6 +18,7 @@ document.addEventListener('DOMContentLoaded', async function () {
             )
           `);
     if (error) {
+        document.getElementById("errorModalLabel").textContent = 'Error';
         console.error('Error fetching data:', error.message);
         openModal('Error fetching data!');
         return;
@@ -194,8 +195,9 @@ function saveChanges(rowIndex, originalValues) {
         const newValues = Array.from(inputFields).map(input => input.value);
         updateValues(newValues, originalValues);
     } else {
+        document.getElementById("errorModalLabel").textContent = 'Error';
         console.error('Error: One or more input fields are null.');
-        openModal('Error: One or more input fields are null.');
+        openModal('One or more input fields are null!');
     }
 }
 
@@ -213,7 +215,6 @@ async function updateValues(newValues, originalValues) {
             .select('uid')
             .eq('fullname', originalValues[1])
             .single();
-
         if (uidError) throw uidError;
 
         // Use a transaction to perform both updates
@@ -224,7 +225,6 @@ async function updateValues(newValues, originalValues) {
                 nationality: newValues[1]
             })
             .eq('uid', uidData.uid);
-
         if (profileError) throw profileError;
 
         const { data: driversData, error: driversError } = await _supabase
@@ -234,12 +234,13 @@ async function updateValues(newValues, originalValues) {
                 points: newValues[3]
             })
             .eq('uid', uidData.uid);
-
         if (driversError) throw driversError;
 
+        document.getElementById("errorModalLabel").textContent = 'Success';
         openModal('Data updated successfully!');
         disableRowEditing();
     } catch (error) {
+        document.getElementById("errorModalLabel").textContent = 'Error';
         console.error('Error during updating data:', error.message);
         openModal('Error during updating data. Please try again.');
     }

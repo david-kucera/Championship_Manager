@@ -15,8 +15,10 @@ document.addEventListener('DOMContentLoaded', function () {
             const { user, error } = response.data;
 
             if (error) {
+                document.getElementById("errorModalLabel").textContent = 'Error';
                 openModal(error.message);
             } else if (user) {
+                document.getElementById("errorModalLabel").textContent = 'Success';
                 openModal('Registration successfull!\nNow log in!');
 
                 // Get user uid
@@ -28,6 +30,7 @@ document.addEventListener('DOMContentLoaded', function () {
                     .insert({ uid: uid, fullname: '***', nationality: '***', date_of_birth: '***', role: 'user', description: '***' });
 
                 if (profileError) {
+                    document.getElementById("errorModalLabel").textContent = 'Error';
                     openModal('Error creating profile. Please try again.');
                 } else {
                     setTimeout(function() {
@@ -36,6 +39,7 @@ document.addEventListener('DOMContentLoaded', function () {
                 }
             }
         } catch (error) {
+            document.getElementById("errorModalLabel").textContent = 'Error';
             openModal('Error during registration. Please try again.');
         }
     });

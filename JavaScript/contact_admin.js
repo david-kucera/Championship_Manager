@@ -20,6 +20,7 @@ async function getMessages() {
         .select('*');
     if (error) {
         console.log(error.message);
+        document.getElementById("errorModalLabel").textContent = 'Error';
         openModal("An error occured while fetching data! Try again.");
         return;
     }
@@ -54,6 +55,7 @@ async function deleteMessage(messageId) {
         .delete()
         .match({ id: messageId });
     if (error) {
+        document.getElementById("errorModalLabel").textContent = 'Error';
         console.log(error.message);
         openModal("Error deleting message!");
     } else {

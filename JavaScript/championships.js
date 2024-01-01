@@ -7,12 +7,17 @@ if (isAuthenticated && isAdmin) {
 
 document.addEventListener('DOMContentLoaded', async function () {
     const tableBody = document.getElementById('tbody_championships');
-    const { data, error } = await _supabase.from('championships').select('*');
     const editButton = document.getElementById('editButton');
     let isEditing = false;
 
+    const { data, error } = await _supabase
+        .from('championships')
+        .select('*');
     if (error) {
+        document.getElementById("errorModalLabel").textContent = 'Error';
         console.error('Error fetching data:', error.message);
+        openModal("Error fetching championship data!");
+        return;
     } else {
         data.sort((a, b) => a.name.localeCompare(b.name));
         data.forEach((championship) => {
@@ -168,11 +173,12 @@ async function updateValues(rowIndex, updatedValues) {
             .from('championships')
             .update({ name: newName, startDate: updatedValues[1], endDate: updatedValues[2], description: updatedValues[3] })
             .eq('name', oldName);
-
         if (error) {
+            document.getElementById("errorModalLabel").textContent = 'Error';
             console.error('Error during updating data:', error.message);
             openModal('Error during updating data!');
         } else {
+            document.getElementById("errorModalLabel").textContent = 'Success';
             console.log('Data updated successfully:', data);
             openModal('Data updated sucessfully!');
             disableRowEditing();
@@ -182,6 +188,7 @@ async function updateValues(rowIndex, updatedValues) {
             }, 100);
         }
     } catch (error) {
+        document.getElementById("errorModalLabel").textContent = 'Error';
         console.error('Error during updating data:', error.message);
         openModal('Error during updating data!');
     }
@@ -246,20 +253,20 @@ function handleAcceptedValues(newRow) {
 }
 
 async function insertData(insertData) {
-    // Add to database
     try {
         const { error } = await _supabase
             .from('championships')
-            .insert({ name: insertData[0], startDate: insertData[1], endDate: insertData[2], description: insertData[3] });
-
-        if (error) {
-            console.error('Error during inserting data:', error.message);
-            openModal('Error during inserting data.');
-        }
+            .insert({
+                name: insertData[0],
+                startDate: insertData[1],
+                endDate: insertData[2],
+                description: insertData[3] });
     } catch (error) {
+        document.getElementById("errorModalLabel").textContent = 'Error';
         console.error('Error during inserting data:', error.message);
         openModal('Error during inserting data.');
     }
+    document.getElementById("errorModalLabel").textContent = 'Success';
     openModal("Sucessfully added!");
     setTimeout(function() {
         window.location.reload();
@@ -273,9 +280,9 @@ async function removeChampionship(name) {
             .from('championships')
             .delete()
             .eq('name', name);
-
     } catch (error) {
+        document.getElementById("errorModalLabel").textContent = 'Error';
         console.error('Error during deleting data:', error.message);
-        openModal('Erro during deleting data.');
+        openModal('Error during deleting data.');
     }
 }

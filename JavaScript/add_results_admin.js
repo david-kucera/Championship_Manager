@@ -8,7 +8,6 @@ document.addEventListener('DOMContentLoaded', async function() {
         document.getElementById("errorModalLabel").textContent = 'Error';
         openModal("Error fetching championships! Try again.");
         console.log('Error fetching championships:', championshipsError.message);
-        document.getElementById("errorModalLabel").textContent = 'Info';
     }
     championshipsData.sort((a, b) => a.name.localeCompare(b.name));
 
@@ -79,7 +78,6 @@ async function loadResults() {
         document.getElementById("errorModalLabel").textContent = 'Error';
         openModal("Error fetching result data! Try again.");
         console.log('Error fetching result data:', raceError.message);
-        document.getElementById("errorModalLabel").textContent = 'Info';
         return;
     }
 
@@ -154,7 +152,6 @@ async function createResult() {
     if (!raceId || !driverUid || !position || !time || !points) {
         document.getElementById("errorModalLabel").textContent = 'Error';
         openModal("Please fill all the fields correctly.");
-        document.getElementById("errorModalLabel").textContent = 'Info';
         return;
     }
 
@@ -165,12 +162,10 @@ async function createResult() {
         if (error) throw error;
         document.getElementById("errorModalLabel").textContent = 'Success';
         openModal("Result added successfully!");
-        document.getElementById("errorModalLabel").textContent = 'Info';
     } catch (err) {
         document.getElementById("errorModalLabel").textContent = 'Error';
         console.error("Error adding result:", err.message);
         openModal("Error when adding result.");
-        document.getElementById("errorModalLabel").textContent = 'Info';
     }
 }
 
@@ -183,7 +178,6 @@ async function loadRacesForChampionship(championshipId) {
         document.getElementById("errorModalLabel").textContent = 'Error';
         openModal("Error fetching races! Try again.");
         console.log('Error fetching races:', racesError.message);
-        document.getElementById("errorModalLabel").textContent = 'Info';
         return;
     }
 
@@ -209,7 +203,6 @@ async function loadDriversForChampionship(championshipId) {
         document.getElementById("errorModalLabel").textContent = 'Error';
         openModal("Error fetching drivers! Try again.");
         console.log('Error fetching drivers:', driversError.message);
-        document.getElementById("errorModalLabel").textContent = 'Info';
         return;
     }
 

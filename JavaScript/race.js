@@ -6,7 +6,10 @@ document.addEventListener('DOMContentLoaded', function() {
     if (raceId) {
         fetchAndDisplayRaceData(raceId);
     } else {
+        document.getElementById("errorModalLabel").textContent = 'Error';
         console.error('No race ID provided in the URL');
+        openModal("No race ID provided in the URL");
+        return;
     }
 });
 
@@ -16,7 +19,9 @@ async function fetchAndDisplayRaceData(raceId) {
         .select('*')
         .eq('id', raceId);
     if (error) {
+        document.getElementById("errorModalLabel").textContent = 'Error';
         console.error('Error fetching race data:', error.message);
+        openModal("Error fetching race data.");
         return;
     }
 
@@ -38,6 +43,7 @@ async function fetchAndDisplayRaceData(raceId) {
         .select('*')
         .eq('raceId', raceId);
     if (resultError) {
+        document.getElementById("errorModalLabel").textContent = 'Error';
         console.log('Error fetching race results: ', resultError.message);
         openModal('Error fetching race results!');
     }
@@ -65,6 +71,7 @@ async function fetchAndDisplayRaceData(raceId) {
             .select('car')
             .eq('uid', uid);
         if (driverError) {
+            document.getElementById("errorModalLabel").textContent = 'Error';
             console.error("Error fetching driver details: ", driverError.message);
             openModal('Error fetching driver details!');
         }

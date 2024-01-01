@@ -15,6 +15,7 @@ async function login(event) {
         });
 
         if (error) {
+            document.getElementById("errorModalLabel").textContent = 'Error';
             openModal(error.message);
             console.error(error);
         }
@@ -38,6 +39,7 @@ async function login(event) {
             }, 1000);
         }
     } catch (error) {
+        document.getElementById("errorModalLabel").textContent = 'Error';
         console.error('Error during login:', error.message);
         openModal('Error during login!');
     } finally {
@@ -56,6 +58,7 @@ async function setUserRole(uid) {
             .single();
 
         if (error) {
+            document.getElementById("errorModalLabel").textContent = 'Error';
             console.error('Error fetching role:', error.message);
             openModal('Error fetching user role!');
             return;
@@ -64,11 +67,13 @@ async function setUserRole(uid) {
         if (data && data.role) {
             document.cookie = 'role=' + data.role + '; path=/';
         } else {
+            document.getElementById("errorModalLabel").textContent = 'Error';
             console.error('User role not found.');
             openModal('User role not found!');
         }
 
     } catch (error) {
+        document.getElementById("errorModalLabel").textContent = 'Error';
         console.error('Error fetching user role:', error.message);
         openModal('Error fetching user role!');
     }

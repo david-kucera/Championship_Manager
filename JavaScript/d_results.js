@@ -7,6 +7,7 @@ document.addEventListener('DOMContentLoaded', async function () {
         .select('raceId, position, time, points')
         .eq('driverUid', uid);
     if (resultError) {
+        document.getElementById("errorModalLabel").textContent = 'Error';
         openModal("Error fetching result data! Try again.");
         console.log('Error fetching result data:', resultError.message);
     }
@@ -17,8 +18,8 @@ document.addEventListener('DOMContentLoaded', async function () {
             .from('races')
             .select('name, date')
             .eq('id', result.raceId);
-
         if (raceError) {
+            document.getElementById("errorModalLabel").textContent = 'Error';
             openModal("Error fetching race data! Try again.");
             console.log('Error fetching race data:', raceError.message);
             continue;

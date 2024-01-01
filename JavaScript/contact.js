@@ -9,14 +9,16 @@ async function submitForm(event) {
         const { data, error } = await _supabase
             .from('contactFormSubmissions')
             .insert([{ userEmail, message, timestamp }]);
-
         if (error) {
+            document.getElementById("errorModalLabel").textContent = 'Error';
             openModal("Error sendinng form!");
         } else {
+            document.getElementById("errorModalLabel").textContent = 'Success';
             openModal("Message successfully sent!");
             document.getElementById('message').value = '';
         }
     } catch (error) {
+        document.getElementById("errorModalLabel").textContent = 'Error';
         openModal("Error sending form!");
     }
 }

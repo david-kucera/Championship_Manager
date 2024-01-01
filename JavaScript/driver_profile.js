@@ -18,8 +18,10 @@ document.addEventListener('DOMContentLoaded', function() {
             const publicURL = 'https://cbpdfyauboisozcxuohi.supabase.co/storage/v1/object/public/' + filePath;
             document.getElementById('profilePicImage').src = publicURL;
         } else {
+            document.getElementById("errorModalLabel").textContent = 'Error';
             console.error('No driver ID provided in the URL');
             openModal('No driver ID provided in the URL!');
+            return;
         }
     }
 
@@ -42,6 +44,7 @@ async function fetchAndDisplayDriverData(driverUid) {
         .eq('uid', driverUid)
         .single();
     if (driverError) {
+        document.getElementById("errorModalLabel").textContent = 'Error';
         console.error('Error fetching drivers data:', error.message);
         openModal('Error fetching drivers data!');
         return;
@@ -64,6 +67,7 @@ async function fetchAndDisplayRaceResults(driverUid) {
         .select('*')
         .eq('driverUid', driverUid);
     if (resultError) {
+        document.getElementById("errorModalLabel").textContent = 'Error';
         console.log('Error fetching race result data: ', resultError.message);
         openModal('Error fetching race result data!');
         return;
@@ -82,6 +86,7 @@ async function fetchAndDisplayRaceResults(driverUid) {
             .select('name, date, location')
             .eq('id', raceId);
         if (raceError) {
+            document.getElementById("errorModalLabel").textContent = 'Error';
             console.log('Error fetching race details: ', raceError.message);
             openModal('Error fetching race details!');
         }
