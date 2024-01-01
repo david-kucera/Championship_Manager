@@ -293,3 +293,9 @@ function filterRacesByName() {
         }
     }
 }
+
+if (!isAdmin) {
+    $('#admin-race').hide();
+    document.getElementById('errorModalLabel').textContent = 'Error';
+    openModal("You are not an admin! Go away!");
+}

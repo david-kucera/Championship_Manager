@@ -65,5 +65,6 @@ if (isAdmin) {
     getMessages();
 } else {
     $('#messages').hide();
+    document.getElementById('errorModalLabel').textContent = 'Error';
     openModal("You are not an admin! Go away!");
 }

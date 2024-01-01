@@ -5,8 +5,10 @@ document.addEventListener('DOMContentLoaded', async function() {
         .from('championships')
         .select('name, id');
     if (championshipsError) {
+        document.getElementById("errorModalLabel").textContent = 'Error';
         openModal("Error fetching championships! Try again.");
         console.log('Error fetching championships:', championshipsError.message);
+        document.getElementById("errorModalLabel").textContent = 'Info';
     }
     championshipsData.sort((a, b) => a.name.localeCompare(b.name));
 
@@ -74,8 +76,10 @@ async function loadResults() {
             profiles:driverUid (fullname)
         `);
     if (resultError) {
+        document.getElementById("errorModalLabel").textContent = 'Error';
         openModal("Error fetching result data! Try again.");
         console.log('Error fetching result data:', raceError.message);
+        document.getElementById("errorModalLabel").textContent = 'Info';
         return;
     }
 
@@ -148,7 +152,9 @@ async function createResult() {
     const points = document.getElementById('points').value;
 
     if (!raceId || !driverUid || !position || !time || !points) {
+        document.getElementById("errorModalLabel").textContent = 'Error';
         openModal("Please fill all the fields correctly.");
+        document.getElementById("errorModalLabel").textContent = 'Info';
         return;
     }
 
@@ -157,11 +163,14 @@ async function createResult() {
             { driverUid, raceId, position, time, points }
         ]);
         if (error) throw error;
+        document.getElementById("errorModalLabel").textContent = 'Success';
         openModal("Result added successfully!");
-        console.log(data);
+        document.getElementById("errorModalLabel").textContent = 'Info';
     } catch (err) {
+        document.getElementById("errorModalLabel").textContent = 'Error';
         console.error("Error adding result:", err.message);
         openModal("Error when adding result.");
+        document.getElementById("errorModalLabel").textContent = 'Info';
     }
 }
 
@@ -171,8 +180,10 @@ async function loadRacesForChampionship(championshipId) {
         .select('id, name')
         .eq('championshipId', championshipId);
     if (racesError) {
+        document.getElementById("errorModalLabel").textContent = 'Error';
         openModal("Error fetching races! Try again.");
         console.log('Error fetching races:', racesError.message);
+        document.getElementById("errorModalLabel").textContent = 'Info';
         return;
     }
 
@@ -195,8 +206,10 @@ async function loadDriversForChampionship(championshipId) {
         .select(`driverUid`)
         .eq('championshipId', championshipId);
     if (driversError) {
+        document.getElementById("errorModalLabel").textContent = 'Error';
         openModal("Error fetching drivers! Try again.");
         console.log('Error fetching drivers:', driversError.message);
+        document.getElementById("errorModalLabel").textContent = 'Info';
         return;
     }
 
@@ -209,8 +222,8 @@ async function loadDriversForChampionship(championshipId) {
             .select('fullname')
             .eq('uid', entry.driverUid)
             .single();
-
         if (nameError) {
+            document.getElementById("errorModalLabel").textContent = 'Error';
             openModal("Error fetching driver names! Try again.");
             console.log('Error fetching driver names:', nameError.message);
             continue;
@@ -232,15 +245,20 @@ async function deleteResult(resultId, rowElement) {
         const { data, error } = await _supabase.from('raceResults').delete().match({ id: resultId });
 
         if (error) throw error;
-
+        document.getElementById("errorModalLabel").textContent = 'Success';
         console.log("Result deleted successfully:", data);
         openModal("Result deleted successfully!");
 
         rowElement.remove();
     } catch (err) {
+        document.getElementById("errorModalLabel").textContent = 'Error';
         console.error("Error deleting result:", err.message);
         openModal("Error when deleting result.");
     }
 }
 
-
+if (!isAdmin) {
+    $('#add-results').hide();
+    document.getElementById('errorModalLabel').textContent = 'Error';
+    openModal("You are not an admin! Go away!");
+}
