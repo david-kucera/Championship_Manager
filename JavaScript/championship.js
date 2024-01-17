@@ -202,6 +202,7 @@ async function addDriverToChampionship(championshipId) {
         document.getElementById("errorModalLabel").textContent = 'Success';
         console.log("Driver added to championship successfully:", data);
         openModal("You were successfully added to the championship!");
+        document.getElementById('add-to-championship-button').style.display = 'none';
     } catch (err) {
         document.getElementById("errorModalLabel").textContent = 'Error';
         console.error("Error adding driver to championship:", err.message);
